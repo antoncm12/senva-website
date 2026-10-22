@@ -1,0 +1,2 @@
+# Plain HTML site: no build step, publish the repository as it is.
+public: .
