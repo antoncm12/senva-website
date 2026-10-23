@@ -4,11 +4,13 @@ The Senva website. Plain HTML and CSS, published as they are by statichost.eu. T
 
 | Page | What it is |
 |---|---|
-| `index.html` | Home page for customers: what Senva is, how it works, what you get, the science in brief, what makes Senva different, questions, waiting list, latest news |
+| `index.html` | Home page for customers: what Senva is, how it works, what you get, the science in brief, what makes Senva different, questions, waiting list, and About Senva (founders and latest news) |
 | `about.html` | Team, backing from Umeå University, our journey (milestones and LinkedIn), how we're testing the test, investors and partners |
 | `science.html` | Article on epigenetic clocks and biological age, with links to the research |
 | `privacy.html` | Privacy notice for the waiting list |
 | `404.html` | Shown for addresses that don't exist |
+
+The menu at the top lists the home page's sections in the order they appear: How it works, What you get, Science, Questions and About. The Science and About sections each lead on to their own page, and on those pages their menu item links to the page itself.
 
 | Other files | What they are |
 |---|---|

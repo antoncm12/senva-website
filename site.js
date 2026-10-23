@@ -4,9 +4,9 @@
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.getElementById('site-nav');
 
-  // Sections that moved to the About page: send old links there
+  // Old addresses of sections that moved or were renamed
   if (document.querySelector('.hero')) {
-    var moved = { '#journey': 'about.html#journey', '#news': 'about.html#journey', '#team': 'about.html#team', '#model': '#different' };
+    var moved = { '#journey': 'about.html#journey', '#news': '#about', '#latest': '#about', '#team': '#about', '#model': '#different' };
     if (moved[location.hash]) location.replace(moved[location.hash]);
   }
 

@@ -214,17 +214,24 @@ a:hover { color: var(--navy); }
 .thanks h3 { font: 600 34px/1.15 var(--serif); color: var(--navy); }
 .thanks p { color: var(--muted); margin-top: 10px; }
 
-/* Latest from Senva */
-.section.latest { background: var(--paper); border-bottom: 1px solid var(--line); }
-.latest-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 32px; }
-.latest-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px; margin-top: 48px; align-items: start; }
+/* About Senva (end of the home page): founders, latest news, link to the About page */
+.section.about-home { background: var(--paper); border-bottom: 1px solid var(--line); }
+.about-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px 32px; }
+.founder-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; max-width: 820px; margin-top: 40px; }
+.founder-card { display: flex; align-items: center; gap: 18px; padding: 16px 22px 16px 16px; background: var(--cream); border-radius: 18px; color: var(--ink); text-decoration: none; }
+.founder-card:hover { background: var(--pale); color: var(--ink); }
+.founder-card img { width: 88px; height: 88px; flex: none; border-radius: 50%; background: var(--line); }
+.founder-card strong { display: block; font: 600 26px/1.15 var(--serif); color: var(--navy); }
+.founder-card strong + span { display: block; margin-top: 4px; font-size: 16px; font-weight: 500; color: var(--teal); }
+.eyebrow { margin-top: 64px; font: 600 14px/1.2 var(--sans); letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); }
+.latest-grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px; margin-top: 20px; align-items: start; }
 .latest-card img { width: 100%; border-radius: 16px; background: var(--line); margin-bottom: 18px; }
 .latest-card time { display: block; color: var(--teal); font-weight: 600; font-size: 16px; }
 .latest-card h3 { font: 600 28px/1.15 var(--serif); color: var(--navy); margin-top: 4px; }
 .latest-card p { color: var(--muted); margin-top: 8px; }
 .latest-side { display: grid; gap: 32px; }
 .latest-side .latest-card { border-top: 1px solid var(--line); padding-top: 18px; }
-.latest .follow { margin-top: 0; max-width: none; background: var(--cream); border-color: var(--cream); }
+.about-home .follow { margin-top: 0; max-width: none; background: var(--cream); border-color: var(--cream); }
 
 /* Our journey: milestones on a line, LinkedIn alongside */
 .anchor-alias { display: block; height: 0; }
@@ -423,6 +430,10 @@ a:hover { color: var(--navy); }
   .member h3 { font-size: 28px; }
   .signup-card { padding: 24px 20px; }
   .latest-card h3 { font-size: 26px; }
+  .founder-cards { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .founder-card img { width: 72px; height: 72px; }
+  .founder-card strong { font-size: 24px; }
+  .eyebrow { margin-top: 48px; }
   .page-hero { padding: 32px 0 56px; }
   .page-hero .lede { font-size: 18px; }
   .article { padding-top: 44px; }

@@ -88,22 +88,21 @@ def head(title, desc, path, og_title, og_desc, og_type='website', jsonld=None, r
     return '\n'.join(parts)
 
 
-NAV = [('How it works', 'how-it-works'), ('What you get', 'what-you-get'), ('Science', 'science'),
-       ('About', None), ('Questions', 'questions')]
+# Every menu item is a section of the home page, in the order the sections appear there.
+# The About and Science sections each lead on to a page of their own; on that page, its item links to the page itself.
+NAV = [('How it works', 'how-it-works', None), ('What you get', 'what-you-get', None), ('Science', 'science', 'science'),
+       ('Questions', 'questions', None), ('About', 'about', 'about')]
 
 
 def header(page, root=''):
     home = page == 'index'
     base = root or './'
     items = []
-    for label, anchor in NAV:
-        if label == 'About':
-            target = root + 'about.html'
-        elif label == 'Science' and not home:
-            target = root + 'science.html'
+    for label, anchor, own_page in NAV:
+        if page == own_page:
+            target, cur = f'{root}{own_page}.html', ' class="is-current" aria-current="page"'
         else:
-            target = ('#' if home else base + '#') + anchor
-        cur = ' class="is-current" aria-current="page"' if (page, label) in (('about', 'About'), ('science', 'Science')) else ''
+            target, cur = ('#' if home else base + '#') + anchor, ''
         items.append(f'        <li><a{cur} href="{target}">{label}</a></li>')
     join = '#waiting-list' if home else base + '#waiting-list'
     return f'''<header class="site-header">
@@ -345,6 +344,13 @@ def signup_thanks(tid, full):
         </div>'''
 
 
+def founder_card(img, name, role):
+    return f'''        <a class="founder-card" href="about.html#team">
+          <img src="img/{img}-168.webp" srcset="img/{img}-168.webp 168w, img/{img}-336.webp 336w" sizes="88px" width="88" height="88" alt="" loading="lazy" decoding="async">
+          <span><strong>{name}</strong><span>{role}</span></span>
+        </a>'''
+
+
 def index_page():
     jsonld = {'@context': 'https://schema.org', '@graph': [
         ORG,
@@ -572,12 +578,20 @@ def index_page():
     </div>
   </section>
 
-  <section class="section latest" id="latest" aria-labelledby="latest-title">
+  <section class="section about-home" id="about" aria-labelledby="about-title">
     <div class="wrap">
-      <div class="latest-head">
-        <h2 class="section-title" id="latest-title">Latest from Senva.</h2>
-        <a class="button button-quiet" href="about.html#journey">Read our story</a>
+      <div class="about-head">
+        <div>
+          <h2 class="section-title" id="about-title">About Senva.</h2>
+          <p class="section-lede">Who we are, and what we’re working on now.</p>
+        </div>
+        <a class="button" href="about.html">Read our story</a>
       </div>
+      <div class="founder-cards">
+{founder_card('anton-carcedo', 'Antón Carcedo', 'Co-founder and CTO')}
+{founder_card('ake-brannstrom', 'Åke Brännström', 'Co-founder and CEO')}
+      </div>
+      <p class="eyebrow">Latest</p>
       <div class="latest-grid">
         <article class="latest-card latest-feature">
           {pitch_img('(max-width: 960px) calc(100vw - 48px), 620px')}
