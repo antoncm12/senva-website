@@ -1,8 +1,14 @@
-/* Senva website: menu, section highlighting and the waiting-list form. No tracking. */
+/* Senva website: menu, section highlighting, LinkedIn posts on request and the waiting-list forms. No cookies, no tracking. */
 (function () {
   var header = document.querySelector('.site-header');
   var toggle = document.querySelector('.nav-toggle');
   var nav = document.getElementById('site-nav');
+
+  // Sections that moved to the About page: send old links there
+  if (document.querySelector('.hero')) {
+    var moved = { '#journey': 'about.html#journey', '#news': 'about.html#journey', '#team': 'about.html#team', '#model': '#different' };
+    if (moved[location.hash]) location.replace(moved[location.hash]);
+  }
 
   // Menu button on small screens
   if (header && toggle && nav) {
@@ -36,17 +42,16 @@
   if (nav && 'IntersectionObserver' in window) {
     var links = {};
     Array.prototype.forEach.call(nav.querySelectorAll('a[href^="#"]'), function (link) {
-      links[link.getAttribute('href').slice(1)] = link;
+      if (!link.classList.contains('nav-cta')) links[link.getAttribute('href').slice(1)] = link;
     });
     var sections = document.querySelectorAll('main section[id]');
-    if (sections.length) {
+    if (sections.length && Object.keys(links).length) {
       var current = null;
       var observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
           if (current) current.classList.remove('is-current');
           current = links[entry.target.id] || null;
-          if (current && current.classList.contains('nav-cta')) current = null;
           if (current) current.classList.add('is-current');
         });
       }, { rootMargin: '-35% 0px -60% 0px' });
@@ -70,42 +75,83 @@
     });
   });
 
-  // Waiting-list form: send to Formspree without leaving the page
-  var form = document.getElementById('signup-form');
-  if (!form || !window.fetch) return;
-  var status = form.querySelector('.form-status');
-  var button = form.querySelector('button[type="submit"]');
-  var thanks = document.getElementById('signup-thanks');
+  // Waiting-list forms: send to Formspree without leaving the page
+  var forms = document.querySelectorAll('form.signup-form');
+  if (!forms.length || !window.fetch || !window.FormData) return;
 
-  form.addEventListener('submit', function (event) {
-    event.preventDefault();
-    status.textContent = '';
-    status.className = 'form-status';
-    if (!form.checkValidity()) {
-      var firstInvalid = form.querySelector(':invalid');
-      if (firstInvalid && firstInvalid.name === 'consent') {
-        status.textContent = 'Tick the box to confirm we may email you.';
-      } else {
-        status.textContent = 'Add your name and a valid email address.';
-      }
-      status.classList.add('error');
-      if (firstInvalid) firstInvalid.focus();
-      return;
+  // Where the visitor came from: campaign tags on the link (utm_...) and the site that linked here.
+  // Read from this page's address only; nothing is stored on the visitor's device.
+  var campaign = [];
+  location.search.replace(/^\?/, '').split('&').forEach(function (pair) {
+    var parts = pair.split('=');
+    var key = decodeURIComponent(parts[0] || '');
+    if (/^utm_(source|medium|campaign|content|term)$/.test(key) && parts[1]) {
+      campaign.push(key.slice(4) + '=' + decodeURIComponent(parts[1].replace(/\+/g, ' ')).slice(0, 80));
     }
-    button.disabled = true;
-    button.textContent = 'Joining…';
-    fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
-      .then(function (response) {
-        if (!response.ok) throw new Error('Request failed');
-        form.hidden = true;
-        thanks.hidden = false;
-        thanks.focus();
-      })
-      .catch(function () {
-        status.textContent = 'You weren’t added, because the form couldn’t be sent. Try again, or email anton.carcedo@umu.se.';
-        status.classList.add('error');
-        button.disabled = false;
-        button.textContent = 'Join the waiting list';
+  });
+  var referrer = '';
+  try {
+    if (document.referrer && new URL(document.referrer).host !== location.host) referrer = document.referrer.slice(0, 200);
+  } catch (e) { referrer = ''; }
+
+  Array.prototype.forEach.call(forms, function (form) {
+    var status = form.querySelector('.form-status');
+    var button = form.querySelector('button[type="submit"]');
+    var buttonText = button ? button.textContent : '';
+    var thanks = document.getElementById(form.getAttribute('data-thanks'));
+    var fields = form.querySelectorAll('input[required]');
+    var campaignField = form.querySelector('input[name="campaign"]');
+    var referrerField = form.querySelector('input[name="referrer"]');
+    if (campaignField) campaignField.value = campaign.join(', ');
+    if (referrerField) referrerField.value = referrer;
+
+    var clearInvalid = function (field) {
+      field.removeAttribute('aria-invalid');
+      field.removeAttribute('aria-describedby');
+    };
+    Array.prototype.forEach.call(fields, function (field) {
+      field.addEventListener(field.type === 'checkbox' ? 'change' : 'input', function () {
+        if (field.checkValidity()) clearInvalid(field);
       });
+    });
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      status.textContent = '';
+      status.className = 'form-status';
+      Array.prototype.forEach.call(fields, clearInvalid);
+      if (!form.checkValidity()) {
+        var invalid = form.querySelectorAll(':invalid');
+        Array.prototype.forEach.call(invalid, function (field) {
+          field.setAttribute('aria-invalid', 'true');
+          if (status.id) field.setAttribute('aria-describedby', status.id);
+        });
+        var first = invalid[0];
+        status.textContent = first && first.name === 'consent'
+          ? 'Tick the box to confirm we may email you.'
+          : 'Add a valid email address.';
+        status.classList.add('error');
+        if (first) first.focus();
+        return;
+      }
+      button.disabled = true;
+      button.textContent = 'Joining…';
+      fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
+        .then(function (response) {
+          if (!response.ok) throw new Error('Request failed');
+          if (typeof window.plausible === 'function') window.plausible('Signup');
+          form.hidden = true;
+          if (thanks) {
+            thanks.hidden = false;
+            thanks.focus();
+          }
+        })
+        .catch(function () {
+          status.textContent = 'You weren’t added, because the form couldn’t be sent. Try again, or email anton.carcedo@umu.se.';
+          status.classList.add('error');
+          button.disabled = false;
+          button.textContent = buttonText;
+        });
+    });
   });
 })();

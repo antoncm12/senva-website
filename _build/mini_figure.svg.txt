@@ -1,0 +1,39 @@
+<svg viewBox="0 0 400 336" role="img" aria-labelledby="mini-fig-desc">
+            <desc id="mini-fig-desc">The same stretch of DNA, A T C G T A, shown in five cells. The C of the CpG site carries a methyl tag in three of the five cells, so the site is 60% methylated.</desc>
+            <circle cx="10" cy="15" r="6" fill="#2E8C83"/>
+            <text class="fig-muted" x="22" y="20">Methyl tag</text>
+            <circle cx="132" cy="15" r="5" fill="#FFFDF9" stroke="#2E8C83" stroke-width="2"/>
+            <text class="fig-muted" x="144" y="20">No tag</text>
+            <g fill="#E3EFEC">
+              <rect x="120" y="78" width="62" height="25" rx="7"/>
+              <rect x="120" y="134" width="62" height="25" rx="7"/>
+              <rect x="120" y="190" width="62" height="25" rx="7"/>
+              <rect x="120" y="246" width="62" height="25" rx="7"/>
+              <rect x="120" y="302" width="62" height="25" rx="7"/>
+            </g>
+            <g class="fig-muted">
+              <text x="0" y="96">Cell 1</text>
+              <text x="0" y="152">Cell 2</text>
+              <text x="0" y="208">Cell 3</text>
+              <text x="0" y="264">Cell 4</text>
+              <text x="0" y="320">Cell 5</text>
+            </g>
+            <g class="fig-dna" text-anchor="middle">
+              <text y="96"><tspan x="76">A</tspan><tspan x="106">T</tspan><tspan x="136">C</tspan><tspan x="166">G</tspan><tspan x="196">T</tspan><tspan x="226">A</tspan></text>
+              <text y="152"><tspan x="76">A</tspan><tspan x="106">T</tspan><tspan x="136">C</tspan><tspan x="166">G</tspan><tspan x="196">T</tspan><tspan x="226">A</tspan></text>
+              <text y="208"><tspan x="76">A</tspan><tspan x="106">T</tspan><tspan x="136">C</tspan><tspan x="166">G</tspan><tspan x="196">T</tspan><tspan x="226">A</tspan></text>
+              <text y="264"><tspan x="76">A</tspan><tspan x="106">T</tspan><tspan x="136">C</tspan><tspan x="166">G</tspan><tspan x="196">T</tspan><tspan x="226">A</tspan></text>
+              <text y="320"><tspan x="76">A</tspan><tspan x="106">T</tspan><tspan x="136">C</tspan><tspan x="166">G</tspan><tspan x="196">T</tspan><tspan x="226">A</tspan></text>
+            </g>
+            <path d="M136 78v-9M136 134v-9M136 190v-9M136 246v-9M136 302v-9" stroke="#2E8C83" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="136" cy="63" r="6" fill="#2E8C83"/>
+            <circle cx="136" cy="119" r="6" fill="#2E8C83"/>
+            <circle cx="136" cy="175" r="5" fill="#FFFDF9" stroke="#2E8C83" stroke-width="2"/>
+            <circle cx="136" cy="231" r="6" fill="#2E8C83"/>
+            <circle cx="136" cy="287" r="5" fill="#FFFDF9" stroke="#2E8C83" stroke-width="2"/>
+            <path d="M252 52h7v276h-7" fill="none" stroke="#9AA4AE" stroke-width="1.5"/>
+            <text class="fig-strong" x="276" y="172">3 of 5 cells</text>
+            <text class="fig-muted" x="276" y="193">carry the tag</text>
+            <text class="fig-big" x="274" y="242">60%</text>
+            <text class="fig-muted" x="276" y="265">methylated</text>
+          </svg>

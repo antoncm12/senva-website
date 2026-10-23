@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /_build/
 
 Sitemap: https://senvahealth.com/sitemap.xml
