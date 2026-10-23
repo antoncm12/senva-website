@@ -91,6 +91,8 @@ a:hover { color: var(--navy); }
 .backing-inner { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px 64px; align-items: center; }
 .backing h2 { font: 600 clamp(28px, 3vw, 36px)/1.12 var(--serif); color: var(--navy); text-wrap: balance; }
 .backing p { color: var(--muted); max-width: 38em; }
+.backing-logos { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 40px; margin-top: 24px; }
+.backing-logos a { display: block; border-radius: 4px; }
 
 /* Sections */
 .section { padding: 112px 0; }
@@ -318,6 +320,9 @@ a:hover { color: var(--navy); }
   .milestone::before { left: -32px; }
   .milestone:not(:last-child)::after { left: -25px; }
   .milestone h3 { font-size: 26px; }
+  .backing-logos { gap: 16px 24px; }
+  .backing-logos .logo-umu { height: 56px; width: auto; }
+  .backing-logos .logo-io { height: 40px; width: auto; }
   .member { grid-template-columns: 96px minmax(0, 1fr); gap: 18px; }
   .member img { width: 96px; height: 96px; }
   .member h3 { font-size: 27px; }
