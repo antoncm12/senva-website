@@ -3,69 +3,143 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Senva: Know your health. Take charge.</title>
-<meta name="description" content="Senva is a saliva test you take at home. It reads epigenetic marks and turns them into clear next steps for your health. Analysed in Europe, launching in 2027.">
+<title>Senva: at-home epigenetic saliva test for biological age</title>
+<meta name="description" content="Senva is an at-home saliva test that reads epigenetic marks to estimate your biological age and give you clear next steps. Developed at Umeå University.">
 <link rel="canonical" href="https://senvahealth.com/">
 <meta name="theme-color" content="#1F3A5F">
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Senva">
+<meta property="og:locale" content="en_GB">
 <meta property="og:url" content="https://senvahealth.com/">
 <meta property="og:title" content="Senva: Know your health. Take charge. Stay healthy for longer.">
-<meta property="og:description" content="A saliva test you take at home that turns epigenetic marks into clear next steps for your health. Launching in the EU in 2027.">
+<meta property="og:description" content="An at-home saliva test that reads epigenetic marks to estimate your biological age and give you clear next steps. Launching in the EU in 2027.">
 <meta property="og:image" content="https://senvahealth.com/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Senva: Know your health. Take charge. Stay healthy for longer.">
 <meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="favicon.ico" sizes="32x32">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/cormorant-600.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/outfit-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="styles.css">
+<script>document.documentElement.classList.add('js');</script>
+<script src="site.js" defer></script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://senvahealth.com/#organization",
+      "name": "Senva",
+      "url": "https://senvahealth.com/",
+      "logo": "https://senvahealth.com/logo.png",
+      "description": "Senva is developing an at-home saliva test that reads epigenetic marks to estimate biological age and give clear next steps for health. Founded at Umeå University, Sweden.",
+      "address": { "@type": "PostalAddress", "addressLocality": "Umeå", "addressCountry": "SE" },
+      "founder": [
+        { "@type": "Person", "name": "Antón Carcedo", "affiliation": { "@type": "CollegeOrUniversity", "name": "Umeå University" } },
+        { "@type": "Person", "name": "Åke Brännström", "jobTitle": "Professor of mathematics", "affiliation": { "@type": "CollegeOrUniversity", "name": "Umeå University" } }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://senvahealth.com/#website",
+      "url": "https://senvahealth.com/",
+      "name": "Senva",
+      "alternateName": ["Senva Health", "senvahealth.com"],
+      "inLanguage": "en",
+      "publisher": { "@id": "https://senvahealth.com/#organization" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://senvahealth.com/#questions",
+      "mainEntity": [
+        { "@type": "Question", "name": "What is biological age?", "acceptedAnswer": { "@type": "Answer", "text": "It’s an estimate of how old your body seems, based on markers such as epigenetic marks, compared with your age in years. If it’s lower than your age in years, your body shows fewer signs of ageing than expected." } },
+        { "@type": "Question", "name": "Is Senva a medical test?", "acceptedAnswer": { "@type": "Answer", "text": "No. Senva is a wellness test that helps you understand your health and what to work on. It doesn’t diagnose disease. If you have health concerns, talk to your doctor." } },
+        { "@type": "Question", "name": "Do you read my genes?", "acceptedAnswer": { "@type": "Answer", "text": "No. We measure epigenetic marks at a small set of sites. We don’t analyse your genetic code." } },
+        { "@type": "Question", "name": "Why saliva and not blood?", "acceptedAnswer": { "@type": "Answer", "text": "Saliva is easy to give at home, with no needles, and it carries DNA from your own cells. Our model is built for saliva from the start." } },
+        { "@type": "Question", "name": "Where is my sample analysed?", "acceptedAnswer": { "@type": "Answer", "text": "In a European lab, and your data is handled under the EU’s data protection rules (GDPR)." } },
+        { "@type": "Question", "name": "When can I order?", "acceptedAnswer": { "@type": "Answer", "text": "We plan to launch in the EU in 2027. Join the waiting list and we’ll tell you first." } }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<header class="hero">
-  <div class="wrap">
-    <div class="topbar">
-      <a class="brand" href="./" aria-label="Senva home">
-        <svg viewBox="0 0 160 160" aria-hidden="true"><circle cx="80" cy="80" r="78" fill="#F6F1E7"/><path d="M108 52 C 96 38, 58 38, 56 62 C 54 84, 104 76, 104 100 C 104 124, 64 126, 50 110" fill="none" stroke="#1F3A5F" stroke-width="13" stroke-linecap="round"/><circle cx="122" cy="122" r="8" fill="#4FB3A9"/></svg>
-        <span>senva</span>
-      </a>
-      <a class="topbar-link" href="#waiting-list">Waiting list</a>
-    </div>
-
-    <h1 class="hero-title"><span>Know your health.</span> <span>Take charge.</span> <span>Stay healthy for longer.</span></h1>
-    <div class="hero-sub">
-      <p class="intro">Senva is a saliva test you take at home. It reads epigenetic marks, the small chemical tags on your DNA that change with how you live, and turns them into clear next steps.</p>
-      <div class="hero-actions">
-        <a class="button button-mint" href="#waiting-list">Join the waiting list</a>
-        <span class="launch-note">Launching in the EU in 2027</span>
-      </div>
-    </div>
+<header class="site-header">
+  <div class="wrap header-bar">
+    <a class="brand" href="./" aria-label="Senva home">
+      <svg viewBox="0 0 160 160" aria-hidden="true"><circle cx="80" cy="80" r="78" fill="#F6F1E7"/><path d="M108 52 C 96 38, 58 38, 56 62 C 54 84, 104 76, 104 100 C 104 124, 64 126, 50 110" fill="none" stroke="#1F3A5F" stroke-width="13" stroke-linecap="round"/><circle cx="122" cy="122" r="8" fill="#4FB3A9"/></svg>
+      <span>senva</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="nav-toggle-icon" aria-hidden="true"></span><span class="nav-toggle-label">Menu</span></button>
+    <nav class="site-nav" id="site-nav" aria-label="Main">
+      <ul>
+        <li><a href="#how-it-works">How it works</a></li>
+        <li><a href="#science">Science</a></li>
+        <li><a href="#model">Our model</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a href="#questions">Questions</a></li>
+        <li><a class="nav-cta" href="#waiting-list">Waiting list</a></li>
+      </ul>
+    </nav>
   </div>
 </header>
 
 <main id="main">
 
-  <section class="section" aria-labelledby="how-title">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="wrap">
+      <h1 class="hero-title" id="hero-title"><span>Know your health.</span> <span>Take charge.</span> <span>Stay healthy for longer.</span></h1>
+      <div class="hero-sub">
+        <p class="intro">Senva is a saliva test you take at home. It reads epigenetic marks, the small chemical tags on your DNA that change with how you live, to estimate your biological age and give you clear next steps.</p>
+        <div class="hero-actions">
+          <a class="button button-mint" href="#waiting-list">Join the waiting list</a>
+          <span class="launch-note">Launching in the EU in 2027</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how-it-works" aria-labelledby="how-title">
     <div class="wrap">
       <h2 class="section-title" id="how-title">From one saliva sample to concrete steps.</h2>
       <ol class="steps" role="list">
         <li>
-          <span class="step-num" aria-hidden="true">1</span>
+          <div class="step-top">
+            <span class="step-num" aria-hidden="true">1</span>
+            <svg class="step-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M24 6 40 14v20l-16 8-16-8V14z"/><path d="m8 14 16 8 16-8M24 22v20"/><path class="accent" d="m16 10 16 8v6"/></svg>
+          </div>
           <h3>Order online</h3>
           <p>A saliva kit arrives at your home.</p>
         </li>
         <li>
-          <span class="step-num" aria-hidden="true">2</span>
+          <div class="step-top">
+            <span class="step-num" aria-hidden="true">2</span>
+            <svg class="step-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M13 20h22M16.5 20v15.5a7.5 7.5 0 0 0 15 0V20M16.5 31h15"/><path class="dot" d="M24 3c-3.1 3.8-4.7 6.5-4.7 8.6a4.7 4.7 0 0 0 9.4 0c0-2.1-1.6-4.8-4.7-8.6z"/></svg>
+          </div>
           <h3>Take the sample at home</h3>
           <p>No needles. It takes about five minutes.</p>
         </li>
         <li>
-          <span class="step-num" aria-hidden="true">3</span>
+          <div class="step-top">
+            <span class="step-num" aria-hidden="true">3</span>
+            <svg class="step-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M17 4c0 10 14 10 14 20s-14 10-14 20M31 4c0 10-14 10-14 20s14 10 14 20"/><path d="M18.6 9h10.8M18.6 19h10.8M18.6 29h10.8M18.6 39h10.8"/><path class="accent" d="M31 24h4"/><circle class="dot" cx="38.6" cy="24" r="3.2"/></svg>
+          </div>
           <h3>Analysed in Europe</h3>
           <p>A European lab measures the marks on your DNA, and our model interprets them.</p>
         </li>
         <li>
-          <span class="step-num" aria-hidden="true">4</span>
+          <div class="step-top">
+            <span class="step-num" aria-hidden="true">4</span>
+            <svg class="step-icon" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M10.5 20.4A14 14 0 0 1 37.5 20.4M37.5 27.6A14 14 0 0 1 10.5 27.6"/><path d="m32.6 16.9 4.9 3.5 2.6-5.4M15.4 31.1l-4.9-3.5-2.6 5.4"/><path class="accent" d="m18.5 24.3 4 4 7.5-8"/></svg>
+          </div>
           <h3>Act, then test again</h3>
           <p>Clear next steps on nutrition, movement and sleep. Test again after six months to see what changed.</p>
         </li>
@@ -73,17 +147,34 @@
     </div>
   </section>
 
-  <section class="section band" aria-labelledby="epi-title">
+  <section class="section band" id="science" aria-labelledby="science-title">
     <div class="wrap split">
-      <h2 class="section-title" id="epi-title">Epigenetic, not genetic.</h2>
-      <div class="split-body">
-        <p>Your genetic code stays the same all your life. Epigenetic marks don’t. They shift with age and with how you sleep, move, eat and handle stress, which is why your result can change when you do.</p>
-        <p>Senva reads a small set of these marks. We don’t analyse your genetic code.</p>
+      <div class="split-head">
+        <h2 class="section-title" id="science-title">Epigenetic, not genetic.</h2>
+        <p class="split-lede">Your genetic code stays the same all your life. Epigenetic marks don’t. They shift with age and with how you sleep, move, eat and handle stress, which is why your result can change when you do.</p>
+      </div>
+      <div class="findings">
+        <div class="finding">
+          <h3>Marks on your DNA</h3>
+          <p>The best-studied mark is DNA methylation, a small chemical tag on the DNA letter C. Identical twins start out with almost the same pattern, and it drifts apart as they age (<a href="https://doi.org/10.1073/pnas.0500398102">Fraga et al., 2005</a>).</p>
+        </div>
+        <div class="finding">
+          <h3>Clocks that measure ageing</h3>
+          <p>In 2013, researchers showed that methylation at a set of DNA sites predicts a person’s age, in blood and across most tissues of the body (<a href="https://doi.org/10.1016/j.molcel.2012.10.016">Hannum et al., 2013</a>; <a href="https://doi.org/10.1186/gb-2013-14-10-r115">Horvath, 2013</a>). Newer clocks also predict health and lifespan (<a href="https://doi.org/10.18632/aging.101414">Levine et al., 2018</a>; <a href="https://doi.org/10.18632/aging.101684">Lu et al., 2019</a>).</p>
+        </div>
+        <div class="finding">
+          <h3>Shaped by how you live</h3>
+          <p>Diet, education and body weight are linked to faster or slower epigenetic ageing (<a href="https://doi.org/10.18632/aging.101168">Quach et al., 2017</a>). In a two-year trial, moderate calorie restriction slightly slowed the pace of ageing (<a href="https://doi.org/10.1038/s43587-022-00357-y">Waziry et al., 2023</a>).</p>
+        </div>
+        <div class="findings-end">
+          <p>Senva reads a small set of these marks. We don’t analyse your genetic code.</p>
+          <a class="button button-quiet" href="science.html">How epigenetic clocks work</a>
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="section" aria-labelledby="model-title">
+  <section class="section" id="model" aria-labelledby="model-title">
     <div class="wrap">
       <h2 class="section-title" id="model-title">Our own model, developed at Umeå University.</h2>
       <div class="points">
@@ -107,7 +198,7 @@
     </div>
   </section>
 
-  <section class="section follow" aria-labelledby="progress-title">
+  <section class="section follow" id="progress" aria-labelledby="progress-title">
     <div class="wrap">
       <h2 class="section-title" id="progress-title">Where we are.</h2>
       <ol class="timeline" role="list">
@@ -123,13 +214,18 @@
     <div class="wrap">
       <h2 class="section-title" id="news-title">News.</h2>
       <!-- To add news: copy one <article class="news-item"> block, paste it at the top of the list and edit it.
-           For a LinkedIn post, add a link inside the <div>: <p><a href="POST-URL">Read the post on LinkedIn</a></p> -->
+           For a LinkedIn post, add a link inside the <div>: <p><a href="POST-URL">Read the post on LinkedIn</a></p>
+           For a photo, copy the <figure class="news-photo"> block and put the image files in img/. -->
       <div class="news">
         <article class="news-item">
           <time datetime="2026-10-20">20 Oct 2026</time>
           <div>
             <h3>Pitching Senva at SKERIC Week</h3>
             <p>We presented Senva at SKERIC Week, the Sweden-Korea collaboration on education, research and innovation, with KTH Innovation, and made many new contacts.</p>
+            <figure class="news-photo">
+              <img src="img/skeric-pitch-960.webp" srcset="img/skeric-pitch-640.webp 640w, img/skeric-pitch-960.webp 960w" sizes="(max-width: 600px) calc(100vw - 32px), 560px" width="960" height="640" alt="Antón Carcedo speaking to a seated audience in front of a pink #itallstartshere neon sign" loading="lazy" decoding="async">
+              <figcaption>Antón Carcedo pitching Senva at KTH Innovation.</figcaption>
+            </figure>
           </div>
         </article>
         <article class="news-item">
@@ -150,10 +246,38 @@
     </div>
   </section>
 
-  <section class="section follow" aria-labelledby="faq-title">
+  <section class="section follow" id="team" aria-labelledby="team-title">
+    <div class="wrap">
+      <h2 class="section-title" id="team-title">Who we are.</h2>
+      <div class="team">
+        <article class="member">
+          <img src="img/anton-carcedo-336.webp" srcset="img/anton-carcedo-168.webp 168w, img/anton-carcedo-336.webp 336w" sizes="(max-width: 600px) 96px, 144px" width="144" height="144" alt="Antón Carcedo" loading="lazy" decoding="async">
+          <div>
+            <h3>Antón Carcedo</h3>
+            <p class="member-role">Co-founder. Leads model development.</p>
+            <p class="member-bio">Computational biologist and PhD candidate in physics at Umeå University. He builds mechanistic models of DNA methylation and its role in ageing.</p>
+          </div>
+        </article>
+        <article class="member">
+          <img src="img/ake-brannstrom-336.webp" srcset="img/ake-brannstrom-168.webp 168w, img/ake-brannstrom-336.webp 336w" sizes="(max-width: 600px) 96px, 144px" width="144" height="144" alt="Åke Brännström" loading="lazy" decoding="async">
+          <div>
+            <h3>Åke Brännström</h3>
+            <p class="member-role">Co-founder. Leads product and partnerships.</p>
+            <p class="member-bio">Professor of mathematics at Umeå University. His research uses mathematical models to understand living systems, from evolution and biodiversity to the spread of infectious disease.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section follow" id="questions" aria-labelledby="faq-title">
     <div class="wrap">
       <h2 class="section-title" id="faq-title">Questions.</h2>
       <div class="faq">
+        <details>
+          <summary>What is biological age?</summary>
+          <p>It’s an estimate of how old your body seems, based on markers such as epigenetic marks, compared with your age in years. If it’s lower than your age in years, your body shows fewer signs of ageing than expected. <a href="science.html">How epigenetic clocks work</a></p>
+        </details>
         <details>
           <summary>Is Senva a medical test?</summary>
           <p>No. Senva is a wellness test that helps you understand your health and what to work on. It doesn’t diagnose disease. If you have health concerns, talk to your doctor.</p>
@@ -161,6 +285,10 @@
         <details>
           <summary>Do you read my genes?</summary>
           <p>No. We measure epigenetic marks at a small set of sites. We don’t analyse your genetic code.</p>
+        </details>
+        <details>
+          <summary>Why saliva and not blood?</summary>
+          <p>Saliva is easy to give at home, with no needles, and it carries DNA from your own cells. Our model is built for saliva from the start.</p>
         </details>
         <details>
           <summary>Where is my sample analysed?</summary>
@@ -223,67 +351,25 @@
         <p>Senva is being set up as a company in Umeå, Sweden, with support from Umeå University Holding.</p>
       </div>
       <div>
-        <h2>Founders</h2>
-        <ul>
-          <li class="person"><strong>Åke Brännström</strong>Professor of mathematics, Umeå University</li>
-          <li class="person"><strong>Antón Carcedo</strong>Computational biologist, Umeå University</li>
-        </ul>
-      </div>
-      <div>
         <h2>Contact</h2>
         <ul>
           <li><a href="mailto:anton.carcedo@umu.se">anton.carcedo@umu.se</a></li>
           <li><a href="mailto:ake.brannstrom@umu.se">ake.brannstrom@umu.se</a></li>
         </ul>
       </div>
+      <div>
+        <h2>More</h2>
+        <ul>
+          <li><a href="science.html">The science</a></li>
+          <li><a href="privacy.html">Privacy notice</a></li>
+        </ul>
+      </div>
     </div>
     <div class="footer-bottom">
       <span>© 2026 Senva</span>
-      <a href="privacy.html">Privacy notice</a>
+      <span>Senva is a wellness test and doesn’t diagnose disease.</span>
     </div>
   </div>
 </footer>
-
-<script>
-(function () {
-  var form = document.getElementById('signup-form');
-  if (!form || !window.fetch) return;
-  var status = form.querySelector('.form-status');
-  var button = form.querySelector('button[type="submit"]');
-  var thanks = document.getElementById('signup-thanks');
-
-  form.addEventListener('submit', function (event) {
-    event.preventDefault();
-    status.textContent = '';
-    status.className = 'form-status';
-    if (!form.checkValidity()) {
-      var firstInvalid = form.querySelector(':invalid');
-      if (firstInvalid && firstInvalid.name === 'consent') {
-        status.textContent = 'Tick the box to confirm we may email you.';
-      } else {
-        status.textContent = 'Add your name and a valid email address.';
-      }
-      status.classList.add('error');
-      if (firstInvalid) firstInvalid.focus();
-      return;
-    }
-    button.disabled = true;
-    button.textContent = 'Joining…';
-    fetch(form.action, { method: 'POST', body: new FormData(form), headers: { 'Accept': 'application/json' } })
-      .then(function (response) {
-        if (!response.ok) throw new Error('Request failed');
-        form.hidden = true;
-        thanks.hidden = false;
-        thanks.focus();
-      })
-      .catch(function () {
-        status.textContent = 'You weren’t added, because the form couldn’t be sent. Try again, or email anton.carcedo@umu.se.';
-        status.classList.add('error');
-        button.disabled = false;
-        button.textContent = 'Join the waiting list';
-      });
-  });
-})();
-</script>
 </body>
 </html>
