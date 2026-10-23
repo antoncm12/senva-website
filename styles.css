@@ -86,6 +86,12 @@ a:hover { color: var(--navy); }
 @keyframes strand-draw { to { stroke-dashoffset: 0; } }
 @keyframes tag-in { from { opacity: 0; transform: translateY(10px) scale(0.6); } to { opacity: 1; transform: none; } }
 
+/* Spin-out and backing, right under the hero */
+.backing { background: var(--paper); border-bottom: 1px solid var(--line); padding: 40px 0; }
+.backing-inner { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px 64px; align-items: center; }
+.backing h2 { font: 600 clamp(28px, 3vw, 36px)/1.12 var(--serif); color: var(--navy); text-wrap: balance; }
+.backing p { color: var(--muted); max-width: 38em; }
+
 /* Sections */
 .section { padding: 112px 0; }
 .section.follow-on { padding-top: 24px; }
@@ -278,6 +284,8 @@ a:hover { color: var(--navy); }
 }
 @media (max-width: 960px) {
   .split, .signup-grid, .journey-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+  .backing { padding: 32px 0; }
+  .backing-inner { grid-template-columns: minmax(0, 1fr); }
   .hero-sub { margin-left: 0; }
   .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 48px; }
   .steps li::after { display: none; }
