@@ -4,12 +4,12 @@ The Senva website. Plain HTML and CSS with no build step: the files are publishe
 
 | File | What it is |
 |---|---|
-| `index.html` | Home page: how it works, the science in brief, our model, progress, news, team, questions, waiting-list form |
+| `index.html` | Home page: how it works, the science in brief, our model, our journey (with LinkedIn), team, questions, waiting-list form |
 | `science.html` | Longer page on epigenetic clocks and biological age, with links to the research |
 | `privacy.html` | Privacy notice for the waiting list |
 | `404.html` | Shown for addresses that don't exist |
 | `styles.css` | All styling |
-| `site.js` | Phone menu, highlighting the menu item for the section in view, and the waiting-list form |
+| `site.js` | Phone menu, highlighting the menu item for the section in view, LinkedIn posts that load on request, and the waiting-list form |
 | `img/` | Photos, as WebP in two sizes each |
 | `fonts/` | Self-hosted Cormorant Garamond and Outfit (SIL Open Font Licence, see `fonts/OFL.txt`), so no visitor data goes to Google Fonts |
 | `favicon.svg`, `favicon.ico`, `apple-touch-icon.png` | Browser and phone icons |
@@ -18,12 +18,26 @@ The Senva website. Plain HTML and CSS with no build step: the files are publishe
 | `robots.txt`, `sitemap.xml` | Tell search engines what to index |
 | `statichost.yml` | Tells statichost.eu to publish the files without a build |
 
-## Adding news
+## Adding a milestone to Our journey
 
-In `index.html`, find the News section, copy one `<article class="news-item">` block, paste it at the top of the list and edit the date, title and text.
+In `index.html`, find the Our journey section, copy one `<li class="milestone">` block, paste it in date order (above the `next` item, which is the launch) and edit the date, title and text.
 
-- **LinkedIn post:** add `<p><a href="POST-URL">Read the post on LinkedIn</a></p>` inside the block. On LinkedIn, open the post, click the three dots and choose "Copy link to post". Links rather than embedded posts keep LinkedIn's tracking, and a cookie banner, off the site.
-- **Photo:** save it in `img/` as WebP, about 960 px wide (and a 640 px copy), and copy the `<figure class="news-photo">` block from the SKERIC item. Describe the photo in `alt`.
+- **Photo:** save it in `img/` as WebP in two or three widths (640, 960 and 1280 px), copy the `<figure class="milestone-photo">` block from the SKERIC milestone and describe the photo in `alt`.
+- **LinkedIn post:** on LinkedIn, click the three dots on the post, choose "Embed this post" and copy the code. Add this inside the milestone, using the `src` and `height` values from that code:
+
+```html
+<div class="li-post" data-embed="SRC-FROM-THE-EMBED-CODE" data-height="HEIGHT-FROM-THE-EMBED-CODE">
+  <div class="li-post-gate">
+    <p><strong>The post on LinkedIn.</strong> It’s loaded from LinkedIn, which can set cookies, so it only appears if you ask for it.</p>
+    <div class="li-post-actions">
+      <button class="button button-quiet" type="button">Show the post</button>
+      <a href="LINK-TO-THE-POST">Open it on LinkedIn</a>
+    </div>
+  </div>
+</div>
+```
+
+The post only loads when a visitor clicks "Show the post", so the site stays free of cookies and tracking until then, and no cookie banner is needed.
 
 After changing a page, update its `<lastmod>` date in `sitemap.xml`.
 

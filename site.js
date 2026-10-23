@@ -54,6 +54,22 @@
     }
   }
 
+  // LinkedIn posts load only when the visitor asks, so LinkedIn can't set cookies before that
+  Array.prototype.forEach.call(document.querySelectorAll('.li-post[data-embed]'), function (box) {
+    var show = box.querySelector('button');
+    if (!show) return;
+    show.addEventListener('click', function () {
+      var frame = document.createElement('iframe');
+      frame.src = box.getAttribute('data-embed');
+      frame.height = box.getAttribute('data-height') || '640';
+      frame.title = 'LinkedIn post';
+      frame.setAttribute('allowfullscreen', '');
+      box.innerHTML = '';
+      box.appendChild(frame);
+      frame.focus();
+    });
+  });
+
   // Waiting-list form: send to Formspree without leaving the page
   var form = document.getElementById('signup-form');
   if (!form || !window.fetch) return;

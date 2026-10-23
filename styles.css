@@ -62,8 +62,8 @@ a:hover { color: var(--navy); }
 .site-nav .nav-cta:hover { background: rgba(246, 241, 231, 0.1); color: var(--paper); }
 .nav-toggle { display: none; }
 
-/* Hero (navy) */
-.hero { background: var(--navy); color: var(--paper); padding: 40px 0 104px; }
+/* Hero (navy) with the DNA strand: methyl tags switch on from left to right */
+.hero { background: var(--navy); color: var(--paper); padding-top: 40px; overflow: hidden; }
 .hero-title { font: 600 clamp(46px, 6.6vw, 92px)/1 var(--serif); color: var(--mint); letter-spacing: -0.01em; padding-top: 24px; }
 .hero-title span { display: block; text-wrap: balance; }
 .hero-title span:nth-child(2) { padding-left: 0.6em; }
@@ -72,63 +72,90 @@ a:hover { color: var(--navy); }
 .intro { color: var(--on-navy); }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin-top: 30px; }
 .launch-note { color: var(--on-navy); font-size: 16px; }
+.hero-strand { height: 190px; margin-top: 28px; }
+.strand { width: 100%; height: 100%; }
+.strand .line { fill: none; stroke: rgba(159, 216, 209, 0.45); stroke-width: 2; }
+.strand .tag path { stroke: rgba(159, 216, 209, 0.6); stroke-width: 2; stroke-linecap: round; }
+.strand .m { fill: var(--mint); }
+.strand .t { fill: #4FB3A9; }
+.strand .o { fill: var(--navy); stroke: var(--mint); stroke-width: 2; }
+@media (prefers-reduced-motion: no-preference) {
+  .strand .line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: strand-draw 1.4s ease-out 0.1s forwards; }
+  .strand .tag { opacity: 0; transform-box: fill-box; transform-origin: 50% 100%; animation: tag-in 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) forwards; animation-delay: calc(0.35s + var(--i) * 0.045s); }
+}
+@keyframes strand-draw { to { stroke-dashoffset: 0; } }
+@keyframes tag-in { from { opacity: 0; transform: translateY(10px) scale(0.6); } to { opacity: 1; transform: none; } }
 
 /* Sections */
 .section { padding: 112px 0; }
-.section.follow { padding-top: 24px; }
+.section.follow-on { padding-top: 24px; }
 .section-title { font: 600 clamp(36px, 4.6vw, 56px)/1.08 var(--serif); color: var(--navy); max-width: 17em; text-wrap: balance; }
 .section-lede { color: var(--muted); max-width: 36em; margin-top: 18px; }
 
-/* How it works */
-.steps { list-style: none; padding: 0; margin-top: 56px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px; }
-.steps li { border-top: 2px solid var(--navy); padding-top: 18px; }
-.step-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-.step-num { font: 600 60px/1 var(--serif); color: var(--teal); font-variant-numeric: lining-nums; }
-.step-icon { width: 52px; height: 52px; flex: none; color: var(--navy); }
+/* How it works: four steps joined by a dashed path */
+.steps { list-style: none; padding: 0; margin-top: 60px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px; }
+.steps li { position: relative; }
+.steps li:not(:last-child)::after { content: ""; position: absolute; top: 40px; left: 96px; right: -28px; border-top: 2px dashed #A9CCC6; }
+.step-badge { position: relative; width: 80px; height: 80px; border-radius: 50%; background: var(--paper); box-shadow: inset 0 0 0 1.5px var(--pale-line); display: grid; place-items: center; }
+.step-n { position: absolute; top: -2px; right: -6px; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 13px; background: var(--teal); color: #FFFFFF; font: 600 14px/26px var(--sans); text-align: center; }
+.step-icon { width: 46px; height: 46px; color: var(--navy); }
 .step-icon path, .step-icon circle { fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .step-icon .accent { stroke: var(--teal-bright); stroke-width: 2.2; }
 .step-icon .dot { fill: var(--teal-bright); stroke: none; }
-.steps h3 { font: 600 21px/1.3 var(--sans); color: var(--navy); margin-top: 14px; }
+.steps h3 { font: 600 21px/1.3 var(--sans); color: var(--navy); margin-top: 22px; }
 .steps p { color: var(--muted); font-size: 17px; margin-top: 8px; }
 
 /* Epigenetic, not genetic (science summary) */
 .band { background: var(--pale); }
 .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 64px; align-items: start; }
 .split-lede { font-size: 20px; line-height: 1.6; max-width: 26em; margin-top: 24px; }
+.mini-figure { margin-top: 36px; max-width: 440px; background: var(--paper); border: 1px solid var(--pale-line); border-radius: 18px; padding: 22px 22px 16px; }
+.mini-figure svg { width: 100%; height: auto; overflow: visible; }
+.mini-figure figcaption { font-size: 15px; color: var(--muted); margin-top: 12px; }
 .findings { display: grid; gap: 28px; }
 .finding { border-top: 1px solid var(--pale-line); padding-top: 18px; }
 .finding h3 { font: 600 27px/1.15 var(--serif); color: var(--navy); }
 .finding p { color: var(--muted); margin-top: 8px; }
 .findings-end { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px; border-top: 1px solid var(--pale-line); padding-top: 24px; }
-@media (min-width: 961px) { .split > .split-head { position: sticky; top: calc(var(--header-h) + 40px); } }
 
-/* Our own model */
+/* Our own model (navy) */
+.section.dark { background: var(--navy); }
+.dark .section-title { color: var(--paper); }
 .points { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 44px 72px; margin-top: 56px; }
 .point { border-top: 1px solid var(--line); padding-top: 20px; }
 .point h3 { font: 600 30px/1.15 var(--serif); color: var(--navy); }
 .point p { color: var(--muted); margin-top: 8px; max-width: 30em; }
+.dark .point { border-top-color: rgba(246, 241, 231, 0.22); }
+.dark .point h3 { color: var(--mint); }
+.dark .point p { color: var(--on-navy); }
 
-/* Where we are */
-.timeline { list-style: none; padding: 0; margin-top: 56px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.timeline li { position: relative; padding: 30px 28px 0 0; }
-.timeline li::before { content: ""; position: absolute; top: 6px; left: 0; right: 0; height: 2px; background: var(--teal-bright); }
-.timeline li::after { content: ""; position: absolute; top: 0; left: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--teal-bright); }
-.timeline li.next::before { background: #B9D3CE; }
-.timeline li:last-child::before { display: none; }
-.timeline li.future::after { background: var(--cream); border: 2px solid var(--teal-bright); }
-.timeline time { display: block; font-weight: 600; color: var(--navy); }
-.timeline p { color: var(--muted); font-size: 17px; margin-top: 4px; max-width: 15em; }
-
-/* News */
-.news { margin-top: 48px; max-width: 880px; border-top: 1px solid var(--line); }
-.news-item { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 24px; padding: 24px 0; border-bottom: 1px solid var(--line); }
-.news-item time { color: var(--teal); font-weight: 600; font-size: 16px; padding-top: 2px; }
-.news-item h3 { font: 600 21px/1.3 var(--sans); color: var(--navy); }
-.news-item p { color: var(--muted); margin-top: 6px; max-width: 38em; }
-.news-item a { font-weight: 500; }
-.news-photo { margin-top: 18px; max-width: 560px; }
-.news-photo img { width: 100%; border-radius: 14px; background: var(--line); }
-.news-photo figcaption { font-size: 15px; color: var(--muted); margin-top: 8px; }
+/* Our journey: milestones on a line, LinkedIn alongside */
+.anchor-alias { display: block; height: 0; }
+.journey-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 64px; align-items: start; }
+.follow { margin-top: 36px; max-width: 26em; padding: 24px; background: var(--paper); border: 1px solid var(--line); border-radius: 18px; }
+.follow h3 { font: 600 25px/1.2 var(--serif); color: var(--navy); }
+.follow p { color: var(--muted); margin-top: 6px; }
+.follow-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px; }
+.share { margin-top: 20px; font-weight: 500; }
+.milestones { list-style: none; padding: 0 0 0 40px; }
+.milestone { position: relative; padding-bottom: 44px; }
+.milestone::before { content: ""; position: absolute; left: -40px; top: 5px; width: 16px; height: 16px; border-radius: 50%; background: var(--teal-bright); box-shadow: 0 0 0 4px var(--cream); }
+.milestone:not(:last-child)::after { content: ""; position: absolute; left: -33px; top: 25px; bottom: 3px; width: 2px; background: var(--teal-bright); }
+.milestone:has(+ .next)::after { width: 0; background: none; border-left: 2px dashed #9FC9C2; }
+.milestone.next { padding-bottom: 0; }
+.milestone.next::before { background: var(--cream); box-shadow: inset 0 0 0 2px var(--teal-bright), 0 0 0 4px var(--cream); }
+.milestone time { display: block; color: var(--teal); font-weight: 600; font-size: 16px; }
+.milestone h3 { font: 600 28px/1.15 var(--serif); color: var(--navy); margin-top: 4px; }
+.milestone p { color: var(--muted); margin-top: 8px; max-width: 36em; }
+.milestone-photo { margin-top: 22px; }
+.milestone-photo img { width: 100%; border-radius: 16px; background: var(--line); }
+.milestone-photo figcaption { font-size: 15px; color: var(--muted); margin-top: 8px; }
+.li-post { margin-top: 18px; }
+.li-post-gate { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
+.li-post-gate p { margin: 0; font-size: 16px; }
+.li-post-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 14px; }
+.li-post iframe { display: block; width: 100%; max-width: 560px; border: 0; border-radius: 12px; background: #FFFFFF; }
+@media (min-width: 961px) { .journey-head { position: sticky; top: calc(var(--header-h) + 40px); } }
 
 /* Team */
 .team { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 44px 64px; margin-top: 52px; }
@@ -137,6 +164,7 @@ a:hover { color: var(--navy); }
 .member h3 { font: 600 30px/1.15 var(--serif); color: var(--navy); }
 .member-role { color: var(--teal); font-weight: 500; font-size: 16px; margin-top: 6px; }
 .member-bio { color: var(--muted); margin-top: 10px; }
+.member-links { margin-top: 10px; font-size: 16px; font-weight: 500; }
 
 /* Questions */
 .faq { margin-top: 44px; max-width: 780px; border-top: 1px solid var(--line); }
@@ -249,9 +277,10 @@ a:hover { color: var(--navy); }
   html:not(.js) .site-nav ul { flex-wrap: wrap; }
 }
 @media (max-width: 960px) {
-  .split, .signup-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
+  .split, .signup-grid, .journey-grid { grid-template-columns: minmax(0, 1fr); gap: 44px; }
   .hero-sub { margin-left: 0; }
-  .steps, .timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; }
+  .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 48px; }
+  .steps li::after { display: none; }
   .team { grid-template-columns: minmax(0, 1fr); max-width: 640px; }
   .footer-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
   .footer-grid > :first-child { grid-column: 1 / -1; }
@@ -266,21 +295,21 @@ a:hover { color: var(--navy); }
   .js .site-nav { padding: 4px 16px 20px; }
   .brand svg { width: 32px; height: 32px; }
   .brand span { font-size: 28px; }
-  .hero { padding: 28px 0 72px; }
+  .hero { padding-top: 28px; }
   .hero-title { padding-top: 12px; }
   .hero-title span:nth-child(2), .hero-title span:nth-child(3) { padding-left: 0; }
   .hero-sub { margin-top: 32px; }
+  .hero-strand { height: 140px; margin-top: 12px; }
   .section { padding: 80px 0; }
-  .section.follow { padding-top: 16px; }
+  .section.follow-on { padding-top: 16px; }
   .steps, .points, .footer-grid { grid-template-columns: minmax(0, 1fr); }
-  .step-icon { width: 46px; height: 46px; }
+  .steps { row-gap: 40px; }
   .split-lede { font-size: 18px; }
-  .timeline { grid-template-columns: minmax(0, 1fr); row-gap: 0; }
-  .timeline li { padding: 0 0 28px 34px; }
-  .timeline li::before { top: 14px; bottom: -2px; left: 6px; right: auto; width: 2px; height: auto; }
-  .timeline li::after { top: 4px; }
-  .timeline p { max-width: none; }
-  .news-item { grid-template-columns: minmax(0, 1fr); gap: 6px; }
+  .mini-figure { padding: 16px 14px 12px; }
+  .milestones { padding-left: 32px; }
+  .milestone::before { left: -32px; }
+  .milestone:not(:last-child)::after { left: -25px; }
+  .milestone h3 { font-size: 26px; }
   .member { grid-template-columns: 96px minmax(0, 1fr); gap: 18px; }
   .member img { width: 96px; height: 96px; }
   .member h3 { font-size: 27px; }
