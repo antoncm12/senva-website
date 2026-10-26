@@ -1,8 +1,10 @@
 """Build the Senva website: index, about, science, privacy and 404, with one shared header and footer.
 
-Live site (from the repository root):   python3 _build/build_site.py .
+Live site (from the repository root):   python3 _build/build_site.py
 Preview with the content still needed:  python3 _build/build_site.py ../senva-preview --preview
 
+The live build writes the pages and sitemap.xml into public/, the only folder statichost.eu publishes.
+Styles, script, fonts and pictures live in public/ too; this folder holds the content and is not published.
 The preview build shows dashed boxes for every picture and fact still needed and is meant to be opened
 from disk (double-click index.html). It is not part of the website: keep it outside the repository.
 Inputs next to this script: config.json, strand.svg.txt, mini_figure.svg.txt, citations.json,
@@ -13,9 +15,14 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parent
+PUBLIC = REPO / 'public'
 args = [a for a in sys.argv[1:] if not a.startswith('--')]
-OUT = Path(args[0]).resolve() if args else REPO
+OUT = Path(args[0]).resolve() if args else PUBLIC
 PREVIEW = '--preview' in sys.argv
+if not PREVIEW and OUT == REPO:
+    OUT = PUBLIC  # the old command, build_site.py ., still builds the published folder
+if PREVIEW and (OUT == REPO or REPO in OUT.parents):
+    sys.exit('Write the preview outside the repository, for example: python3 _build/build_site.py ../senva-preview --preview')
 
 SITE = 'https://senvahealth.com'
 CFG = json.load(open(HERE / 'config.json', encoding='utf-8'))
@@ -104,7 +111,8 @@ def header(page, root=''):
         else:
             target, cur = ('#' if home else base + '#') + anchor, ''
         items.append(f'        <li><a{cur} href="{target}">{label}</a></li>')
-    join = '#waiting-list' if home else base + '#waiting-list'
+    # Join leads to the nearest form: the main form on the home page, the sign-up band on the About page
+    join = '#waiting-list' if home else '#join' if page == 'about' else base + '#waiting-list'
     return f'''<header class="site-header">
   <div class="wrap header-bar">
     <a class="brand" href="{base}" aria-label="Senva home">
@@ -134,7 +142,7 @@ def footer(page, root=''):
           {LOGO_DARK}
           <span>senva</span>
         </a>
-        <p>Senva is a spin-out from Umeå University, being set up as a company in Umeå, Sweden, with support from the university’s Innovation Office and Umeå University Holding.</p>
+        <p>Senva Health is a spin-out from Umeå University, being set up as a company in Umeå, Sweden, with support from the university’s Innovation Office and Umeå University Holding.</p>
         <p class="footer-name">The name comes from the Latin sentire, to sense.</p>
         {ph('Details', 'company details', 'Once the company is registered: its legal name, organisation number and address.')}
       </div>
@@ -157,7 +165,7 @@ def footer(page, root=''):
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Senva</span>
+      <span>© 2026 Senva Health</span>
       <span>Senva is a wellness test and doesn’t diagnose disease.</span>
     </div>
   </div>
@@ -269,18 +277,22 @@ FAQ = [
     dict(q='What is biological age?', a='It’s an estimate of how old your body seems, based on markers such as epigenetic marks, compared with your age in years. If it’s lower than your age in years, your body shows fewer signs of ageing than expected.',
          more=' <a href="science.html">How epigenetic clocks work</a>'),
     dict(q='What will my report show?', a='Your biological age, how fast you are ageing, and clear next steps on nutrition, movement and sleep. When you test again, it also shows your trend.'),
+    dict(q='How will I get my results?', ph='[In the Senva app, as a PDF, or both?]'),
     dict(q='How long until I get my result?', ph='About [how many] weeks after the lab receives your sample.'),
     dict(q='Is Senva a medical test?', a='No. Senva is a wellness test that helps you understand how you are ageing and what to work on. It doesn’t diagnose disease. If you have health concerns, talk to your doctor.'),
     dict(q='Who can take the test?', ph='Adults aged [18 and over?]. [Anyone who shouldn’t take it, for example during pregnancy or certain treatments?]'),
-    dict(q='Do you read my genes?', a='No. We measure epigenetic marks at a small set of sites. We don’t analyse your genetic code.'),
+    dict(q='Do you read my genes?', a='No. We don’t look at your genetic variants, and we don’t report on your ancestry or your inherited risk of disease. We measure epigenetic marks: small chemical tags on your DNA that shift with age and with how you live.'),
     dict(q='Why saliva and not blood?', a='Saliva is easy to give at home, with no needles, and it carries DNA from your own cells. That’s why we designed Senva around it.'),
-    dict(q='How do you know it works?', a='We’re testing the test before launch. Volunteers give saliva samples, and repeat samples taken over time show whether results are consistent and how they change.',
+    dict(q='How do you know it works?', a='We’re testing the test before launch, with repeat saliva samples from volunteers.',
          more=' <a href="about.html#validation">More about this work</a>'),
-    dict(q='Is my data safe?', a='Yes. Your sample is analysed in a European lab, and your data is kept safe in Europe under the EU’s data protection rules (GDPR). We never sell your data.'),
+    dict(q='Is my data safe?', a='Yes. Your sample is analysed in a European lab, and your results are kept safe in Europe under the EU’s data protection rules (GDPR). We never sell your data. Sign-ups to our waiting list go through Formspree, a form service in the USA.',
+         more=' <a href="privacy.html#who-else">How we handle your sign-up</a>'),
     dict(q='What happens to my sample?', ph='[Destroyed after analysis? Stored, and if so for how long? Never used for research without your consent?]'),
     dict(q='Can I delete my data?', a='Yes. Ask us at any time and we’ll delete it.'),
     dict(q='How often should I test?', a='Testing again shows your trend over time. We’ll suggest when to retest when we launch.'),
-    dict(q='When can I order?', a='We plan to launch in the EU in 2027. Join the waiting list and we’ll tell you first.', inline_ph='First countries: [which?]'),
+    dict(q='When can I order?', a='We plan to launch in the EU in 2027. Join the waiting list and we’ll tell you first.'),
+    dict(q='Which countries can order?', ph='[The EU only at first, or also Norway, Switzerland and the UK? The sign-up form lists all four.]'),
+    dict(q='What will it cost?', ph='[No price needed yet, only when you’ll announce it. For example: “We’ll announce the price before launch, and the waiting list will hear it first.”]'),
 ]
 
 
@@ -313,9 +325,9 @@ def person(name, job, li, **extra):
 
 UMU = {'@type': 'CollegeOrUniversity', 'name': 'Umeå University', 'url': 'https://www.umu.se/en/'}
 ORG = {
-    '@type': 'Organization', '@id': f'{SITE}/#organization', 'name': 'Senva', 'alternateName': ['Senva Health'],
+    '@type': 'Organization', '@id': f'{SITE}/#organization', 'name': 'Senva Health', 'alternateName': ['Senva'],
     'url': f'{SITE}/', 'logo': f'{SITE}/logo.png',
-    'description': 'Senva is developing an at-home saliva test that reads epigenetic marks to estimate biological age and give clear next steps. A spin-out from Umeå University, Sweden.',
+    'description': 'Senva Health is developing an at-home saliva test that reads epigenetic marks to estimate biological age and give clear next steps. A spin-out from Umeå University, Sweden.',
     'address': {'@type': 'PostalAddress', 'addressLocality': 'Umeå', 'addressCountry': 'SE'},
     'funder': {'@type': 'Organization', 'name': 'Umeå University Holding', 'url': 'http://www.umuholding.se/'},
     'founder': [person('Antón Carcedo', 'Co-founder and CTO', LI_ANTON, affiliation=UMU),
@@ -323,7 +335,7 @@ ORG = {
 }
 if COMPANY_LI:
     ORG['sameAs'] = [COMPANY_LI]
-ORG_REF = {'@type': 'Organization', '@id': f'{SITE}/#organization', 'name': 'Senva', 'url': f'{SITE}/', 'logo': f'{SITE}/logo.png'}
+ORG_REF = {'@type': 'Organization', '@id': f'{SITE}/#organization', 'name': 'Senva Health', 'url': f'{SITE}/', 'logo': f'{SITE}/logo.png'}
 
 
 def signup_thanks(tid, full):
@@ -333,15 +345,43 @@ def signup_thanks(tid, full):
             extra += f'\n          <p><a href="{esc(QUESTIONNAIRE)}">Help shape Senva: answer a few quick questions</a></p>'
         else:
             extra += '\n          ' + ph('Link', 'your questionnaire', 'The link to your market-validation questionnaire. People who have just signed up are the most willing to answer it.')
-    li = [x for x in [f'<a href="{LI_ANTON}">Antón</a>' if LI_ANTON else '', f'<a href="{LI_AKE}">Åke</a>' if LI_AKE else ''] if x]
+    li = [x for x in [f'<a href="{LI_ANTON}">Follow Antón on LinkedIn</a>' if LI_ANTON else '',
+                      f'<a href="{LI_AKE}">Follow Åke on LinkedIn</a>' if LI_AKE else ''] if x]
     if COMPANY_LI:
-        li.insert(0, f'<a href="{COMPANY_LI}">Senva</a>')
+        li.insert(0, f'<a href="{COMPANY_LI}">Follow Senva Health on LinkedIn</a>')
     if li:
-        extra += f'\n          <p>Follow our journey on LinkedIn: {" · ".join(li)}</p>'
+        extra += f'\n          <p class="thanks-links">{" ".join(li)}</p>'
     return f'''<div class="thanks" id="{tid}" tabindex="-1" hidden>
           <h3>You’re on the list.</h3>
           <p>Thank you. We’ll email you before Senva launches.</p>{extra}
         </div>'''
+
+
+def signup_band(source):
+    """The slim sign-up form in the middle of the home page and near the end of the About page."""
+    return f'''<section class="signup-band" id="join" aria-labelledby="band-title">
+    <div class="wrap band-inner">
+      <div>
+        <h2 id="band-title">Get first access when we launch.</h2>
+        <p>Join the waiting list and we’ll tell you before anyone else.</p>
+      </div>
+      <div>
+        <form class="signup-form compact" id="band-form" action="{FORM_ACTION}" method="POST" novalidate data-thanks="band-thanks">
+          {hidden_fields(source)}
+          <label class="field">Email
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+          <label class="consent">
+            <input type="checkbox" name="consent" value="yes" required>
+            <span>{CONSENT}</span>
+          </label>
+          <button class="button" type="submit">Join the waiting list</button>
+          <p class="form-status" id="band-status" role="status" aria-live="polite"></p>
+        </form>
+        {signup_thanks('band-thanks', False)}
+      </div>
+    </div>
+  </section>'''
 
 
 def founder_card(img, name, role):
@@ -378,7 +418,7 @@ def index_page():
             <p>{d}</p>
           </li>''' for k, t, d in GET)
     country_opts = '\n'.join(f'              <option>{c}</option>' for c in COUNTRIES)
-    newer, older = MILESTONES[-1], MILESTONES[-2]
+    newest = MILESTONES[-1]
     get_media = ''
     if PREVIEW:
         get_media = f'''
@@ -393,14 +433,14 @@ def index_page():
       <h1 class="hero-title" id="hero-title"><span class="tagline"><span>Know how you’re ageing.</span> <span>Take charge.</span> <span>Stay healthy for longer.</span></span> <span class="hero-product">The at-home saliva test for your biological age.</span></h1>
       <p class="intro">Find out what drives your biological age and what you can change. One saliva sample, taken at home in five minutes.</p>
       <div class="hero-actions">
-        <a class="button button-mint" href="#waiting-list">Join the waiting list</a>
+        <a class="button button-mint" href="#join">Join the waiting list</a>
         <span class="launch-note">Launching in the EU in 2027</span>
       </div>
       <ul class="hero-points" role="list">
         <li>Saliva, no needles</li>
         <li>Analysed and kept safe in Europe</li>
         <li>A result you can understand</li>
-        <li>Developed at Umeå University</li>
+        <li>Our own model, from Umeå University</li>
       </ul>
     </div>
     <div class="hero-strand">{read('strand.svg.txt').strip()}</div>
@@ -433,6 +473,27 @@ def index_page():
     </div>
   </section>
 
+  <section class="section dark" id="different" aria-labelledby="different-title">
+    <div class="wrap">
+      <h2 class="section-title" id="different-title">What makes Senva different.</h2>
+      <p class="section-lede">Senva runs on our own model of epigenetic ageing, developed at Umeå University.</p>
+      <div class="points">
+        <div class="point">
+          <h3>A result we can explain</h3>
+          <p>Our model reads a small set of marks on your DNA, so we can explain what drives your result, not just give you a number.</p>
+        </div>
+        <div class="point">
+          <h3>No needles, no clinic</h3>
+          <p>Our model is built for saliva from the start, so you can take the test at home in a few minutes.</p>
+        </div>
+        <div class="point">
+          <h3>Your results stay in Europe</h3>
+          <p>Your sample is analysed in a European lab, and your results are kept safe under the EU’s data protection rules (GDPR).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section alt" id="what-you-get" aria-labelledby="get-title">
     <div class="wrap">
       <h2 class="section-title" id="get-title">What you get.</h2>
@@ -445,31 +506,7 @@ def index_page():
     </div>
   </section>
 
-  <section class="signup-band" aria-labelledby="band-title">
-    <div class="wrap band-inner">
-      <div>
-        <h2 id="band-title">Get first access when we launch.</h2>
-        <p>Join the waiting list and we’ll tell you before anyone else.</p>
-      </div>
-      <div>
-        <form class="signup-form compact" id="band-form" action="{FORM_ACTION}" method="POST" novalidate data-thanks="band-thanks">
-          {hidden_fields('home page, mid-page form')}
-          <div class="compact-row">
-            <label class="field">Email
-              <input type="email" name="email" autocomplete="email" required>
-            </label>
-            <button class="button" type="submit">Join</button>
-          </div>
-          <label class="consent">
-            <input type="checkbox" name="consent" value="yes" required>
-            <span>{CONSENT}</span>
-          </label>
-          <p class="form-status" id="band-status" role="status" aria-live="polite"></p>
-        </form>
-        {signup_thanks('band-thanks', False)}
-      </div>
-    </div>
-  </section>
+  {signup_band('home page, mid-page form')}
 
   <section class="section" id="science" aria-labelledby="science-title">
     <div class="wrap split">
@@ -502,37 +539,38 @@ def index_page():
     </div>
   </section>
 
-  <section class="section dark" id="different" aria-labelledby="different-title">
-    <div class="wrap">
-      <h2 class="section-title" id="different-title">What makes Senva different.</h2>
-      <p class="section-lede">Senva runs on our own model of epigenetic ageing.</p>
-      <div class="points">
-        <div class="point">
-          <h3>No needles, no clinic</h3>
-          <p>Our model is built for saliva from the start, so you can take the test at home in a few minutes.</p>
-        </div>
-        <div class="point">
-          <h3>A result we can explain</h3>
-          <p>It reads a small set of epigenetically relevant sites, so we can explain what drives your result, not just give you a number.</p>
-        </div>
-        <div class="point">
-          <h3>Steps you can act on</h3>
-          <p>Your report turns your result into concrete steps on nutrition, movement and sleep.</p>
-        </div>
-        <div class="point">
-          <h3>Kept safe in Europe</h3>
-          <p>Your sample is analysed in a European lab, and your data stays protected in Europe under the GDPR.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="questions" aria-labelledby="faq-title">
+  <section class="section alt" id="questions" aria-labelledby="faq-title">
     <div class="wrap">
       <h2 class="section-title" id="faq-title">Questions.</h2>
       <div class="faq">
 {faq_html()}
       </div>
+    </div>
+  </section>
+
+  <section class="section about-home" id="about" aria-labelledby="about-title">
+    <div class="wrap">
+      <div class="about-head">
+        <div>
+          <h2 class="section-title" id="about-title">About Senva.</h2>
+          <p class="section-lede">Who we are, and what we’re working on now.</p>
+        </div>
+        <a class="button" href="about.html">Read our story</a>
+      </div>
+      <div class="founder-cards">
+{founder_card('anton-carcedo', 'Antón Carcedo', 'Co-founder and CTO')}
+{founder_card('ake-brannstrom', 'Åke Brännström', 'Co-founder and CEO')}
+      </div>
+      <p class="eyebrow">Latest</p>
+      <article class="latest-card latest-feature">
+        {pitch_img('(max-width: 960px) calc(100vw - 48px), 516px')}
+        <div>
+          <time datetime="{newest[0]}">{newest[1]}</time>
+          <h3>{newest[2]}</h3>
+          <p>{newest[3]}</p>
+          <p class="latest-more"><a href="about.html#journey">More from our journey</a></p>
+        </div>
+      </article>
     </div>
   </section>
 
@@ -578,47 +616,6 @@ def index_page():
     </div>
   </section>
 
-  <section class="section about-home" id="about" aria-labelledby="about-title">
-    <div class="wrap">
-      <div class="about-head">
-        <div>
-          <h2 class="section-title" id="about-title">About Senva.</h2>
-          <p class="section-lede">Who we are, and what we’re working on now.</p>
-        </div>
-        <a class="button" href="about.html">Read our story</a>
-      </div>
-      <div class="founder-cards">
-{founder_card('anton-carcedo', 'Antón Carcedo', 'Co-founder and CTO')}
-{founder_card('ake-brannstrom', 'Åke Brännström', 'Co-founder and CEO')}
-      </div>
-      <p class="eyebrow">Latest</p>
-      <div class="latest-grid">
-        <article class="latest-card latest-feature">
-          {pitch_img('(max-width: 960px) calc(100vw - 48px), 620px')}
-          <time datetime="{newer[0]}">{newer[1]}</time>
-          <h3>{newer[2]}</h3>
-          <p>{newer[3]}</p>
-        </article>
-        <div class="latest-side">
-          <article class="latest-card">
-            <time datetime="{older[0]}">{older[1]}</time>
-            <h3>{older[2]}</h3>
-            <p>{older[3]}</p>
-            {ph('Photo', 'from the lab (optional)', 'A photo from the first volunteer samples, for example sample tubes or the two of you at work. Nothing that shows a partner lab’s name unless they have agreed.', media=True)}
-          </article>
-          <div class="follow">
-            <h3>Follow along on LinkedIn</h3>
-            <p>We post each step there first.</p>
-            <div class="follow-links">
-            {follow_links()}
-            </div>
-            {company_page_ph()}
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
 </main>'''
     return page('index', h, main)
 
@@ -626,7 +623,7 @@ def index_page():
 # ---------------------------------------------------------------- about page
 def about_page():
     jsonld = {'@context': 'https://schema.org', '@graph': [
-        {'@type': 'AboutPage', '@id': f'{SITE}/about.html', 'url': f'{SITE}/about.html', 'name': 'About Senva', 'inLanguage': 'en-GB',
+        {'@type': 'AboutPage', '@id': f'{SITE}/about.html', 'url': f'{SITE}/about.html', 'name': 'About Senva Health', 'inLanguage': 'en-GB',
          'about': {'@id': f'{SITE}/#organization'}},
         ORG,
         {'@type': 'BreadcrumbList', 'itemListElement': [
@@ -659,9 +656,9 @@ def about_page():
             <figcaption>Antón Carcedo pitching Senva at KTH Innovation.</figcaption>
           </figure>
           {post}
-          {ph('Photo', 'a newer event photo (optional)', 'The slide in this photo shows your old slogan. When you have a photo from a later event, send it and I’ll swap it in.')}'''
+          {ph('Photo', 'a newer event photo (optional)', 'The text on the slide in this photo is blurred. When you have a photo from a later event, send it and I’ll swap it in.')}'''
         elif title.startswith('First volunteer'):
-            extra = '\n          ' + ph('Photo', 'from the lab (optional)', 'Sample tubes or the two of you at work. No partner lab names unless they have agreed.')
+            extra = '\n          ' + ph('Photo', 'from the lab (optional)', 'Sample tubes or the two of you at work. Nothing that shows another organisation’s name unless they have agreed.')
         ms.append(f'''        <li class="milestone">
           <time datetime="{iso}">{label}</time>
           <h3>{title}</h3>
@@ -670,7 +667,7 @@ def about_page():
     ms.append('''        <li class="milestone next">
           <time datetime="2027">2027</time>
           <h3>Launch in the EU</h3>
-          <p>The test goes on sale in the EU. <a href="./#waiting-list">Join the waiting list</a> to hear first.</p>
+          <p>The test goes on sale in the EU. <a href="#join">Join the waiting list</a> to hear first.</p>
         </li>''')
 
     def member(img, name, role, bio, li, who):
@@ -694,7 +691,7 @@ def about_page():
         </ol>
       </nav>
       <h1>Our story.</h1>
-      <p class="lede">Senva grew out of research at Umeå University. We’re building a saliva test that shows how fast you’re ageing and what you can change, analysed and kept safe in Europe.</p>
+      <p class="lede">Senva Health grew out of research at Umeå University. We’re building a saliva test that shows how fast you’re ageing and what you can change, analysed and kept safe in Europe.</p>
     </div>
   </div>
 
@@ -712,7 +709,7 @@ def about_page():
   <section class="backing" aria-labelledby="backing-title">
     <div class="wrap backing-inner">
       <div>
-        <h2 id="backing-title">Backed by Umeå University.</h2>
+        <h2 id="backing-title">Supported by Umeå University.</h2>
         {ph('Quote', 'a word from your backers (optional)', 'A sentence or two about Senva from the Innovation Office or Umeå University Holding, with their permission to publish it.')}
       </div>
       <div>
@@ -750,15 +747,24 @@ def about_page():
     <div class="wrap">
       <h2 class="section-title" id="validation-title">How we’re making sure it works.</h2>
       <p class="section-lede">Before launch, we’re testing the test. Volunteers give saliva samples, and repeat samples taken over time show whether results are consistent and how they change. We’ll share more as the work progresses.</p>
-      {ph('Details', 'what you’re happy to share about validation', 'For example roughly how many volunteers, how far apart the repeat samples are, and whether you plan to publish. No accuracy figures and no lab names.')}
+      {ph('Details', 'what you’re happy to share about validation', 'For example roughly how many volunteers, how far apart the repeat samples are, whether results are compared with established tests, and whether you plan to publish. Only what you’re happy to make public.')}
+      {ph('Details', 'ethics approval (if you have it)', 'If the volunteer study has ethics approval, say so here, for example which authority approved it and when.')}
     </div>
   </section>
+
+  {signup_band('about page, sign-up band')}
 
   <section class="section dark" id="investors" aria-labelledby="investors-title">
     <div class="wrap">
       <h2 class="section-title" id="investors-title">For investors and partners.</h2>
-      <p class="section-lede">We’re building Senva with partners in research, labs and wellness, and we’re glad to talk to investors who share our view of preventive health.</p>
+      <p class="section-lede">Senva is at the pre-seed stage, funded through Umeå University Holding’s Venture Track programme. We’d like to hear from:</p>
+      <ul class="partner-list" role="list">
+        <li><strong>Investors</strong> who share our view of healthy ageing.</li>
+        <li><strong>Labs and wellness companies</strong> that would like to work with us.</li>
+        <li><strong>Organisations interested in a pilot</strong> around our launch in 2027.</li>
+      </ul>
       <p class="contact-line">Write to Åke Brännström, CEO: <a href="mailto:ake.brannstrom@umu.se">ake.brannstrom@umu.se</a></p>
+      {ph('File', 'one-page summary for investors', 'A one-page PDF about Senva that you’re happy to share publicly. A “Download our one-pager” link will go here.')}
       {ph('File', 'press kit', 'A one-page fact sheet, logo files and founder photos in one download, for journalists and partners.')}
     </div>
   </section>
@@ -801,7 +807,6 @@ def privacy_page():
     main = read('privacy.main.html').strip()
     main = main.replace('<!--ANALYTICS-->', analytics)
     main = main.replace('<!--PH:company-->', ph('Details', 'company and privacy contact', 'Once the company is registered: its legal name and organisation number, and a privacy@senvahealth.com address to use here.'))
-    main = main.replace('<!--PH:transfer-->', ph('Details', 'safeguard for the Formspree transfer', 'Name the legal safeguard for sending sign-ups to Formspree in the USA (for example its data processing agreement with standard contractual clauses), or move sign-ups to an EU newsletter tool with double opt-in, such as Brevo or MailerLite.'))
     return page('privacy', h, main)
 
 
@@ -828,9 +833,9 @@ OUT.mkdir(parents=True, exist_ok=True)
 if PREVIEW:
     # the preview is a full copy, so it opens from disk without the repository next to it
     for name in ['styles.css', 'site.js', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png', 'logo.png', 'og.png']:
-        shutil.copy2(REPO / name, OUT / name)
+        shutil.copy2(PUBLIC / name, OUT / name)
     for d in ['img', 'fonts']:
-        shutil.copytree(REPO / d, OUT / d, dirs_exist_ok=True)
+        shutil.copytree(PUBLIC / d, OUT / d, dirs_exist_ok=True)
 
 old_lastmod = {}
 sitemap = OUT / 'sitemap.xml'

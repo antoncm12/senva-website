@@ -10,13 +10,19 @@
     if (moved[location.hash]) location.replace(moved[location.hash]);
   }
 
-  // Menu button on small screens
+  // Menu button on small screens. While the menu is open, the page behind it is inert,
+  // so the keyboard and screen readers stay in the header and the menu.
   if (header && toggle && nav) {
     var label = toggle.querySelector('.nav-toggle-label');
+    var behind = document.querySelectorAll('.skip, main, footer');
     var setOpen = function (open) {
       header.classList.toggle('is-open', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
       if (label) label.textContent = open ? 'Close' : 'Menu';
+      Array.prototype.forEach.call(behind, function (part) {
+        if (open) part.setAttribute('inert', '');
+        else part.removeAttribute('inert');
+      });
     };
     toggle.addEventListener('click', function () {
       setOpen(!header.classList.contains('is-open'));
@@ -24,6 +30,8 @@
     nav.addEventListener('click', function (event) {
       if (event.target.closest('a')) setOpen(false);
     });
+    var headerJoin = header.querySelector('.header-join');
+    if (headerJoin) headerJoin.addEventListener('click', function () { setOpen(false); });
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape' && header.classList.contains('is-open')) {
         setOpen(false);

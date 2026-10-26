@@ -35,7 +35,7 @@
    "@type": "AboutPage",
    "@id": "https://senvahealth.com/about.html",
    "url": "https://senvahealth.com/about.html",
-   "name": "About Senva",
+   "name": "About Senva Health",
    "inLanguage": "en-GB",
    "about": {
     "@id": "https://senvahealth.com/#organization"
@@ -44,13 +44,13 @@
   {
    "@type": "Organization",
    "@id": "https://senvahealth.com/#organization",
-   "name": "Senva",
+   "name": "Senva Health",
    "alternateName": [
-    "Senva Health"
+    "Senva"
    ],
    "url": "https://senvahealth.com/",
    "logo": "https://senvahealth.com/logo.png",
-   "description": "Senva is developing an at-home saliva test that reads epigenetic marks to estimate biological age and give clear next steps. A spin-out from Umeå University, Sweden.",
+   "description": "Senva Health is developing an at-home saliva test that reads epigenetic marks to estimate biological age and give clear next steps. A spin-out from Umeå University, Sweden.",
    "address": {
     "@type": "PostalAddress",
     "addressLocality": "Umeå",
@@ -120,7 +120,7 @@
       <svg viewBox="0 0 160 160" aria-hidden="true"><circle cx="80" cy="80" r="78" fill="#F6F1E7"/><path d="M108 52 C 96 38, 58 38, 56 62 C 54 84, 104 76, 104 100 C 104 124, 64 126, 50 110" fill="none" stroke="#1F3A5F" stroke-width="13" stroke-linecap="round"/><circle cx="122" cy="122" r="8" fill="#4FB3A9"/></svg>
       <span>senva</span>
     </a>
-    <a class="header-join" href="./#waiting-list">Join</a>
+    <a class="header-join" href="#join">Join</a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav"><span class="nav-toggle-icon" aria-hidden="true"></span><span class="nav-toggle-label">Menu</span></button>
     <nav class="site-nav" id="site-nav" aria-label="Main">
       <ul>
@@ -129,7 +129,7 @@
         <li><a href="./#science">Science</a></li>
         <li><a href="./#questions">Questions</a></li>
         <li><a class="is-current" aria-current="page" href="about.html">About</a></li>
-        <li><a class="nav-cta" href="./#waiting-list">Join the waiting list</a></li>
+        <li><a class="nav-cta" href="#join">Join the waiting list</a></li>
       </ul>
     </nav>
   </div>
@@ -145,7 +145,7 @@
         </ol>
       </nav>
       <h1>Our story.</h1>
-      <p class="lede">Senva grew out of research at Umeå University. We’re building a saliva test that shows how fast you’re ageing and what you can change, analysed and kept safe in Europe.</p>
+      <p class="lede">Senva Health grew out of research at Umeå University. We’re building a saliva test that shows how fast you’re ageing and what you can change, analysed and kept safe in Europe.</p>
     </div>
   </div>
 
@@ -178,7 +178,7 @@
   <section class="backing" aria-labelledby="backing-title">
     <div class="wrap backing-inner">
       <div>
-        <h2 id="backing-title">Backed by Umeå University.</h2>
+        <h2 id="backing-title">Supported by Umeå University.</h2>
       </div>
       <div>
         <p>Senva grew out of research at <a href="https://www.umu.se/en/">Umeå University</a>. We’re supported by the university’s <a href="https://www.umu.se/en/innovation-support/">Innovation Office</a> and by <a href="http://www.umuholding.se/">Umeå University Holding</a> through its Venture Track programme.</p>
@@ -241,7 +241,7 @@
         <li class="milestone next">
           <time datetime="2027">2027</time>
           <h3>Launch in the EU</h3>
-          <p>The test goes on sale in the EU. <a href="./#waiting-list">Join the waiting list</a> to hear first.</p>
+          <p>The test goes on sale in the EU. <a href="#join">Join the waiting list</a> to hear first.</p>
         </li>
       </ol>
     </div>
@@ -254,10 +254,47 @@
     </div>
   </section>
 
+  <section class="signup-band" id="join" aria-labelledby="band-title">
+    <div class="wrap band-inner">
+      <div>
+        <h2 id="band-title">Get first access when we launch.</h2>
+        <p>Join the waiting list and we’ll tell you before anyone else.</p>
+      </div>
+      <div>
+        <form class="signup-form compact" id="band-form" action="https://formspree.io/f/xzdopbyo" method="POST" novalidate data-thanks="band-thanks">
+          <input type="hidden" name="_subject" value="Senva waiting list">
+          <input type="hidden" name="source" value="about page, sign-up band">
+          <input type="hidden" name="campaign" value="">
+          <input type="hidden" name="referrer" value="">
+          <label class="hp" aria-hidden="true">Leave this empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label>
+          <label class="field">Email
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+          <label class="consent">
+            <input type="checkbox" name="consent" value="yes" required>
+            <span>I’d like Senva to email me about the launch and occasional news. I can unsubscribe at any time. See our <a href="privacy.html">privacy notice</a>.</span>
+          </label>
+          <button class="button" type="submit">Join the waiting list</button>
+          <p class="form-status" id="band-status" role="status" aria-live="polite"></p>
+        </form>
+        <div class="thanks" id="band-thanks" tabindex="-1" hidden>
+          <h3>You’re on the list.</h3>
+          <p>Thank you. We’ll email you before Senva launches.</p>
+          <p class="thanks-links"><a href="https://www.linkedin.com/in/ant%C3%B3n-carcedo-3ab292353/">Follow Antón on LinkedIn</a> <a href="https://www.linkedin.com/in/%C3%A5ke-br%C3%A4nnstr%C3%B6m-90340a31/">Follow Åke on LinkedIn</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section dark" id="investors" aria-labelledby="investors-title">
     <div class="wrap">
       <h2 class="section-title" id="investors-title">For investors and partners.</h2>
-      <p class="section-lede">We’re building Senva with partners in research, labs and wellness, and we’re glad to talk to investors who share our view of preventive health.</p>
+      <p class="section-lede">Senva is at the pre-seed stage, funded through Umeå University Holding’s Venture Track programme. We’d like to hear from:</p>
+      <ul class="partner-list" role="list">
+        <li><strong>Investors</strong> who share our view of healthy ageing.</li>
+        <li><strong>Labs and wellness companies</strong> that would like to work with us.</li>
+        <li><strong>Organisations interested in a pilot</strong> around our launch in 2027.</li>
+      </ul>
       <p class="contact-line">Write to Åke Brännström, CEO: <a href="mailto:ake.brannstrom@umu.se">ake.brannstrom@umu.se</a></p>
     </div>
   </section>
@@ -271,7 +308,7 @@
           <svg viewBox="0 0 160 160" aria-hidden="true"><circle cx="80" cy="80" r="78" fill="#1F3A5F"/><path d="M108 52 C 96 38, 58 38, 56 62 C 54 84, 104 76, 104 100 C 104 124, 64 126, 50 110" fill="none" stroke="#F6F1E7" stroke-width="13" stroke-linecap="round"/><circle cx="122" cy="122" r="8" fill="#4FB3A9"/></svg>
           <span>senva</span>
         </a>
-        <p>Senva is a spin-out from Umeå University, being set up as a company in Umeå, Sweden, with support from the university’s Innovation Office and Umeå University Holding.</p>
+        <p>Senva Health is a spin-out from Umeå University, being set up as a company in Umeå, Sweden, with support from the university’s Innovation Office and Umeå University Holding.</p>
         <p class="footer-name">The name comes from the Latin sentire, to sense.</p>
       </div>
       <div>
@@ -292,7 +329,7 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2026 Senva</span>
+      <span>© 2026 Senva Health</span>
       <span>Senva is a wellness test and doesn’t diagnose disease.</span>
     </div>
   </div>
