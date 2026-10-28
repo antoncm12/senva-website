@@ -25,9 +25,9 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preload" href="fonts/corben-400.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/ibm-plex-sans-300.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=fd13cd94">
 <script>document.documentElement.classList.add('js');</script>
-<script src="site.js" defer></script>
+<script src="site.js?v=fd13cd94" defer></script>
 <script type="application/ld+json">
 {
  "@context": "https://schema.org",
@@ -197,15 +197,6 @@
           <h2 class="section-title" id="journey-title">Our journey.</h2>
           <p class="section-lede">From a research idea at Umeå University to a test you can take at home.</p>
         </div>
-        <div class="follow">
-          <h3>Follow along on LinkedIn</h3>
-          <p>We post each step there first.</p>
-          <div class="follow-links">
-            <a class="button button-quiet" href="https://www.linkedin.com/in/ant%C3%B3n-carcedo-3ab292353/">Follow Antón</a>
-            <a class="button button-quiet" href="https://www.linkedin.com/in/%C3%A5ke-br%C3%A4nnstr%C3%B6m-90340a31/">Follow Åke</a>
-          </div>
-        </div>
-        <p class="share"><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fsenvahealth.com%2F">Share Senva on LinkedIn</a></p>
       </div>
       <ol class="milestones" role="list">
         <li class="milestone">
@@ -250,38 +241,34 @@
     <div class="wrap">
       <h2 class="section-title" id="validation-title">How we’re making sure it works.</h2>
       <p class="section-lede">Before launch, we’re testing the test. Volunteers give saliva samples, and repeat samples taken over time show whether results are consistent and how they change. We’ll share more as the work progresses.</p>
-    </div>
-  </section>
-
-  <section class="signup-band" id="join" aria-labelledby="band-title">
-    <div class="wrap band-inner">
-      <div>
-        <h2 id="band-title">Get first access when we launch.</h2>
-        <p>Join the waiting list and we’ll tell you before anyone else.</p>
-      </div>
-      <div>
-        <form class="signup-form compact" id="band-form" action="https://formspree.io/f/xzdopbyo" method="POST" novalidate data-thanks="band-thanks">
-          <input type="hidden" name="_subject" value="Senva waiting list">
+      <aside class="join-card" id="join" aria-labelledby="band-title">
+        <div>
+          <h2 id="band-title">Get first access when we launch.</h2>
+          <p>Join the waiting list and we’ll tell you before anyone else.</p>
+        </div>
+        <div>
+          <form class="signup-form compact" id="band-form" action="https://formspree.io/f/xzdopbyo" method="POST" novalidate data-thanks="band-thanks">
+            <input type="hidden" name="_subject" value="Senva waiting list">
           <input type="hidden" name="source" value="about page, sign-up band">
           <input type="hidden" name="campaign" value="">
           <input type="hidden" name="referrer" value="">
           <label class="hp" aria-hidden="true">Leave this empty <input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></label>
-          <label class="field">Email
-            <input type="email" name="email" autocomplete="email" required>
-          </label>
-          <label class="consent">
-            <input type="checkbox" name="consent" value="yes" required>
-            <span>I’d like Senva to email me about the launch and occasional news. I can unsubscribe at any time. See our <a href="privacy.html">privacy notice</a>.</span>
-          </label>
-          <button class="button" type="submit">Join the waiting list</button>
-          <p class="form-status" id="band-status" role="status" aria-live="polite"></p>
-        </form>
-        <div class="thanks" id="band-thanks" tabindex="-1" hidden>
+            <label class="field">Email
+              <input type="email" name="email" autocomplete="email" required>
+            </label>
+            <label class="consent">
+              <input type="checkbox" name="consent" value="yes" required>
+              <span>I’d like Senva to email me about the launch and occasional news. I can unsubscribe at any time. See our <a href="privacy.html">privacy notice</a>.</span>
+            </label>
+            <button class="button" type="submit">Join the waiting list</button>
+            <p class="form-status" id="band-status" role="status" aria-live="polite"></p>
+          </form>
+          <div class="thanks" id="band-thanks" tabindex="-1" hidden>
           <h3>You’re on the list.</h3>
           <p>Thank you. We’ll email you before Senva Health launches.</p>
-          <p class="thanks-links"><a href="https://www.linkedin.com/in/ant%C3%B3n-carcedo-3ab292353/">Follow Antón on LinkedIn</a> <a href="https://www.linkedin.com/in/%C3%A5ke-br%C3%A4nnstr%C3%B6m-90340a31/">Follow Åke on LinkedIn</a></p>
         </div>
-      </div>
+        </div>
+      </aside>
     </div>
   </section>
 

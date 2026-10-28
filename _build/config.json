@@ -1,11 +1,8 @@
 {
-  "_about": "Links and switches used by build_site.py. Leave a value empty if it doesn't exist yet.",
+  "_about": "Links and switches used by build_site.py. Leave a value empty if it doesn't exist yet. The LinkedIn addresses only appear as the founders' profile links on the About page and in the data search engines read.",
   "LI_ANTON": "https://www.linkedin.com/in/ant%C3%B3n-carcedo-3ab292353/",
   "LI_AKE": "https://www.linkedin.com/in/%C3%A5ke-br%C3%A4nnstr%C3%B6m-90340a31/",
   "LI_COMPANY": "",
-  "LI_SKERIC_EMBED": "",
-  "LI_SKERIC_URL": "",
-  "LI_SKERIC_HEIGHT": "",
   "QUESTIONNAIRE_URL": "",
   "ANALYTICS_HEAD": ""
 }

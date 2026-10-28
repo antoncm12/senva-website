@@ -10,7 +10,7 @@ from disk (double-click index.html). It is not part of the website: keep it outs
 Inputs next to this script: config.json, strand.svg.txt, mini_figure.svg.txt, citations.json,
 science.main.html and privacy.main.html.
 """
-import datetime, html, json, re, shutil, sys
+import datetime, hashlib, html, json, re, shutil, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -25,10 +25,9 @@ if PREVIEW and (OUT == REPO or REPO in OUT.parents):
     sys.exit('Write the preview outside the repository, for example: python3 _build/build_site.py ../senva-preview --preview')
 
 SITE = 'https://senvahealth.com'
+ASSET_VERSION = ''  # set just before the pages are written, see below
 CFG = json.load(open(HERE / 'config.json', encoding='utf-8'))
 LI_ANTON, LI_AKE, COMPANY_LI = CFG.get('LI_ANTON', ''), CFG.get('LI_AKE', ''), CFG.get('LI_COMPANY', '')
-SKERIC_EMBED, SKERIC_URL = CFG.get('LI_SKERIC_EMBED', ''), CFG.get('LI_SKERIC_URL', '')
-SKERIC_H = CFG.get('LI_SKERIC_HEIGHT', '') or '640'
 QUESTIONNAIRE = CFG.get('QUESTIONNAIRE_URL', '')
 ANALYTICS_HEAD = CFG.get('ANALYTICS_HEAD', '')  # paste the snippet from Plausible here to switch analytics on
 FORM_ACTION = 'https://formspree.io/f/xzdopbyo'
@@ -90,9 +89,9 @@ def head(title, desc, path, og_title, og_desc, og_type='website', jsonld=None, r
     ]
     if preload_sans:
         parts.append(f'<link rel="preload" href="{root}fonts/ibm-plex-sans-300.woff2" as="font" type="font/woff2" crossorigin>')
-    parts += [f'<link rel="stylesheet" href="{root}styles.css">',
+    parts += [f'<link rel="stylesheet" href="{root}styles.css{ASSET_VERSION}">',
               "<script>document.documentElement.classList.add('js');</script>",
-              f'<script src="{root}site.js" defer></script>']
+              f'<script src="{root}site.js{ASSET_VERSION}" defer></script>']
     if ANALYTICS_HEAD and not PREVIEW:
         parts.append(ANALYTICS_HEAD)
     if jsonld:
@@ -184,23 +183,6 @@ def page(name, head_html, main_html, root=''):
 
 
 # ---------------------------------------------------------------- shared pieces
-def follow_links():
-    links = []
-    if COMPANY_LI:
-        links.append(f'<a class="button button-quiet" href="{COMPANY_LI}">Follow Senva</a>')
-    if LI_ANTON:
-        links.append(f'<a class="button button-quiet" href="{LI_ANTON}">Follow Antón</a>')
-    if LI_AKE:
-        links.append(f'<a class="button button-quiet" href="{LI_AKE}">Follow Åke</a>')
-    return '\n            '.join(links)
-
-
-def company_page_ph():
-    if COMPANY_LI:
-        return ''
-    return ph('Link', 'Senva page on LinkedIn', 'Create a company page for Senva on LinkedIn and send me its address. A “Follow Senva” button will appear here.')
-
-
 def hidden_fields(where):
     return f'''<input type="hidden" name="_subject" value="Senva waiting list">
           <input type="hidden" name="source" value="{where}">
@@ -296,6 +278,98 @@ FAQ = [
 ]
 
 
+# ---------------------------------------------------------------- question helper
+# The helper in the corner of every page answers with the written answers below and never makes anything up: the
+# questions with an answer above, plus a few more. Words a visitor might type point to an answer: a phrase counts 3, a
+# word 2, and a word starting with ~ only 1, because it also turns up in other questions. Swedish words are included.
+# If nothing matches, the helper offers to email one of us.
+ASSIST_KW = {
+    'What is biological age?': ['biological age', 'bio age', 'biologisk ålder', 'biological', 'biologisk', 'epigenetic age', 'how old is my body', 'how old am i', 'real age', 'true age', '~age', '~ålder', '~older', '~younger', '~ageing', '~aging'],
+    'What will my report show?': ['report', 'rapport', 'result', 'resultat', 'pace', 'next steps', 'what do i get', 'what will i get', '~show', '~trend'],
+    'Is Senva Health a medical test?': ['medical', 'medicinsk', 'diagnose', 'diagnosis', 'diagnos', 'doctor', 'läkare', 'ivdr', 'ce mark', 'certified', 'approved', '~disease', '~sjukdom', '~clinic'],
+    'Do you read my genes?': ['gene', 'genetic', 'genetisk', 'gener', 'ancestry', 'genome', 'variant', 'inherited', 'hereditary', 'arv', 'dna'],
+    'Why saliva and not blood?': ['saliva', 'saliv', 'spit', 'spott', 'blood', 'blod', 'needle', 'nål', 'finger prick', 'swab'],
+    'How do you know it works?': ['accurate', 'accuracy', 'reliable', 'reliability', 'validated', 'validation', 'evidence', 'proof', 'proven', 'precise', 'precision', 'how do you know', 'is it accurate', 'really work', 'actually work', 'legit', 'scam', 'noggrann', 'tillförlitlig', '~study', '~trust'],
+    'Is my data safe?': ['data', 'privacy', 'private', 'gdpr', 'safe', 'secure', 'security', 'stored', 'storage', 'sell', 'third party', 'integritet', 'säker', 'säkra', 'säkert', 'dataskydd', 'personuppgifter', '~europe', '~share'],
+    'Can I delete my data?': ['delete', 'deletion', 'erase', 'remove my data', 'radera', 'ta bort', 'forget me'],
+    'How often should I test?': ['how often', 'often', 'retest', 'again', 'repeat', 'frequency', 'second test', 'hur ofta', 'igen'],
+    'When can I order?': ['order', 'buy', 'purchase', 'available', 'availability', 'launch', 'release', 'country', 'countries', 'ship', 'shipping', 'deliver', 'delivery', 'beställa', 'köpa', 'lansering', 'lanseras', 'lansera', 'leverans', '~when', '~när', '~sweden'],
+}
+
+ASSIST_EXTRA = [
+    dict(id='price', q='What will it cost?', a='We haven’t announced the price yet. Join the waiting list and we’ll tell you before anyone else.',
+         links=[('#waiting-list', 'Join the waiting list')],
+         kw=['price', 'cost', 'how much does', 'how much is', 'how much will', 'how much would', 'expensive', 'cheap', 'pay', 'payment', 'subscription', 'pris', 'kostar', 'kostnad', 'kr', 'sek', 'euro', 'eur']),
+    dict(id='kit', q='What’s in the kit?', a='Senva Health is our at-home saliva kit. It arrives in one box, with a tube and a funnel for your sample. Give your sample, close the tube and post it back to the lab.',
+         links=[('#kit', 'See the kit')],
+         kw=['kit', 'box', 'tube', 'funnel', 'package', 'parcel', 'contents', 'what is in', 'paket', 'låda', 'rör', 'tratt']),
+    dict(id='how', q='How does it work?', a='Order online and a saliva kit arrives at your home. Give your sample in about five minutes, with no needles, and post it back. A European lab measures the marks on your DNA, and our model interprets them. You get clear next steps on nutrition, movement and sleep, and you can test again to follow your trend.',
+         links=[('#how-it-works', 'How it works')],
+         kw=['how does it work', 'how it works', 'process', 'steps', 'take the sample', 'instructions', 'collect', 'post it', 'send it back', 'return', 'hur fungerar', 'fungerar det', '~sample', '~prov']),
+    dict(id='different', q='What makes Senva Health different?', a='It runs on our own model of epigenetic ageing, developed at Umeå University. The model reads a small set of marks on your DNA, so we can explain what drives your result, not just give you a number. It’s built for saliva, so you can take the test at home, and your sample is analysed in a European lab.',
+         links=[('#different', 'What makes Senva Health different')],
+         kw=['different', 'difference', 'other tests', 'compare', 'compared', 'comparison', 'competitor', 'competitors', 'unique', 'why senva', 'why choose', 'why should i', 'skillnad', 'skillnaden', 'skiljer', 'annorlunda', 'jämför', 'jämfört']),
+    dict(id='turnaround', q='How long until I get my result?', a='We don’t have a turnaround time to share yet. If you’d like to know more, write to us.',
+         links=[], contact=True,
+         kw=['how long until', 'how long does it take', 'how long will it take', 'how long do i wait', 'turnaround', 'how many days', 'how many weeks', 'how fast', 'when will i get', 'when do i get', 'hur lång tid', 'svarstid']),
+    dict(id='sample', q='What happens to my sample?', a='Before we offer the test, we’ll publish a separate privacy policy that explains how samples and results are handled. If you have a question now, write to us.',
+         links=[('privacy.html', 'Privacy notice')], contact=True,
+         kw=['what happens to my sample', 'what happens to my saliva', 'what happens to the sample', 'after the analysis', 'destroyed', 'destroy', 'biobank', 'keep my sample', 'store my sample', 'used for research', 'research use', 'sparas', 'förstörs']),
+    dict(id='who', q='Who is behind Senva?', a='Senva is a spin-out from Umeå University, founded by Antón Carcedo (CTO) and Åke Brännström (CEO). We’re supported by the university’s Innovation Office and by Umeå University Holding through its Venture Track programme.',
+         links=[('about.html', 'About us')],
+         kw=['founder', 'founders', 'team', 'company', 'behind', 'umeå', 'university', 'universitet', 'spin-out', 'spinout', 'startup', 'grundare', 'företag', 'about senva', 'based', 'located', 'where are you', 'where is senva', '~who', '~vem']),
+    dict(id='partners', q='I’m an investor or a possible partner', a='Senva is at the pre-seed stage, funded through Umeå University Holding’s Venture Track programme. We’d like to hear from investors, labs and wellness companies, and organisations interested in a pilot around our launch in 2027. Write to Åke Brännström, CEO.',
+         links=[('about.html#investors', 'For investors and partners'), ('mailto:ake.brannstrom@umu.se', 'Email Åke')],
+         kw=['invest', 'investor', 'investment', 'funding', 'partner', 'partnership', 'pilot', 'collaborate', 'collaboration', 'gym', 'press', 'journalist', 'media', 'business', 'investera', 'samarbete']),
+    dict(id='science', q='How does your model work?', a='Epigenetic clocks estimate biological age from DNA methylation, small chemical tags on your DNA. Our own model was developed at Umeå University and is built for saliva. We don’t share the details of how it’s built, but our science page explains how epigenetic clocks work, with links to the research.',
+         links=[('science.html', 'How epigenetic clocks work')],
+         kw=['model', 'algorithm', 'clock', 'epigenetic clock', 'methylation', 'metylering', 'science', 'research', 'machine learning', 'artificial intelligence', 'cpg', 'modell', 'vetenskap', 'forskning', 'calculate', 'epigenetic', 'epigenetik', 'ai']),
+    dict(id='join', q='How do I join the waiting list?', a='Leave your email in a waiting-list form and tick the box. We’ll email you before Senva Health launches, and you can unsubscribe at any time.',
+         links=[('#waiting-list', 'Go to the waiting list')],
+         kw=['waiting list', 'waitlist', 'sign up', 'signup', 'join', 'newsletter', 'notify', 'updates', 'väntelista', 'anmäl', 'nyhetsbrev']),
+    dict(id='unsubscribe', q='How do I unsubscribe?', a='Use the unsubscribe link in any of our emails, or write to us and we’ll remove you.',
+         links=[('privacy.html', 'Privacy notice')], contact=True,
+         kw=['unsubscribe', 'stop emails', 'opt out', 'remove me', 'avregistrera', 'avsluta']),
+    dict(id='limits', q='Can it tell me about disease or how long I’ll live?', a='No. An epigenetic age is an estimate, not a diagnosis. It says something about how your body is ageing on average, not whether you have or will get a particular disease. If you have health concerns, talk to your doctor.',
+         links=[('science.html#limits', 'What a clock can’t tell you')],
+         kw=['lifespan', 'live longer', 'how long will i live', 'how long i will live', 'how long i live', 'longevity', 'life expectancy', 'die', 'death', 'predict', 'cancer', 'dementia', 'alzheimer', 'heart disease', 'livslängd', '~risk']),
+    dict(id='whocan', q='Who can take the test?', a='We’ll say who can take the test, including the minimum age, before we launch. If you’d like to ask whether it suits you, write to us.',
+         links=[], contact=True,
+         kw=['who can take', 'who can use', 'who is it for', 'who is the test for', 'can anyone', 'how old do i have to be', 'old enough', 'minimum age', 'age limit', 'under 18', 'child', 'children', 'kid', 'kids', 'teenager', 'barn', 'åldersgräns', 'vem kan']),
+    dict(id='health', q='I’m pregnant, on medication or have a health condition', a='Senva Health is a wellness test and doesn’t diagnose disease. If you have health concerns, talk to your doctor. For questions about whether the test suits you, write to us.',
+         links=[], contact=True,
+         kw=['pregnant', 'pregnancy', 'gravid', 'medication', 'medicine', 'medicin', 'diabetes', 'illness', 'condition', 'treatment', 'chemotherapy', 'smoker', 'smoking', 'smoke']),
+    dict(id='contact', q='Write to us', a='Write to us and one of us will reply by email.', links=[], contact=True,
+         kw=['contact', 'email', 'e-mail', 'talk to', 'human', 'person', 'someone', 'support', 'phone', 'call', 'kontakt', 'kontakta', 'mejl', 'mail', '~help', '~hjälp']),
+]
+
+ASSIST_START = ['What is biological age?', 'How does it work?', 'What will my report show?', 'Is my data safe?', 'When can I order?', 'What will it cost?']
+
+ASSIST_CONTACTS = [
+    dict(name='Antón Carcedo', role='CTO', topics='the test and the science', email='anton.carcedo@umu.se'),
+    dict(name='Åke Brännström', role='CEO', topics='investors, partners and press', email='ake.brannstrom@umu.se'),
+]
+
+
+def assistant_js():
+    """The helper's answers, as a small script the page loads when someone opens the helper."""
+    items = []
+    for i, f in enumerate(FAQ):
+        if not f.get('a'):
+            continue
+        assert f['q'] in ASSIST_KW, f'add keywords for the question: {f["q"]}'
+        links = re.findall(r'<a href="([^"]+)">([^<]+)</a>', f.get('more', ''))
+        if f['q'] == 'When can I order?':
+            links = [('#waiting-list', 'Join the waiting list')]
+        items.append(dict(id=f'faq{i}', q=f['q'], a=f['a'], links=[dict(href=h, label=t) for h, t in links], kw=ASSIST_KW[f['q']]))
+    for e in ASSIST_EXTRA:
+        items.append(dict(id=e['id'], q=e['q'], a=e['a'], links=[dict(href=h, label=t) for h, t in e['links']], kw=e['kw'], contact=e.get('contact', False)))
+    by_q = {it['q']: it['id'] for it in items}
+    data = dict(items=items, start=[by_q[q] for q in ASSIST_START], contacts=ASSIST_CONTACTS)
+    return ('/* Generated by _build/build_site.py from the questions and answers there: edit them there, then rebuild. */\n'
+            'window.senvaAssistant = ' + json.dumps(data, ensure_ascii=False, separators=(',', ':')) + ';\n')
+
+
 def faq_html():
     out = []
     for f in FAQ:
@@ -346,43 +420,36 @@ def signup_thanks(tid, full):
             extra += f'\n          <p><a href="{esc(QUESTIONNAIRE)}">Help shape Senva: answer a few quick questions</a></p>'
         else:
             extra += '\n          ' + ph('Link', 'your questionnaire', 'The link to your market-validation questionnaire. People who have just signed up are the most willing to answer it.')
-    li = [x for x in [f'<a href="{LI_ANTON}">Follow Antón on LinkedIn</a>' if LI_ANTON else '',
-                      f'<a href="{LI_AKE}">Follow Åke on LinkedIn</a>' if LI_AKE else ''] if x]
-    if COMPANY_LI:
-        li.insert(0, f'<a href="{COMPANY_LI}">Follow Senva on LinkedIn</a>')
-    if li:
-        extra += f'\n          <p class="thanks-links">{" ".join(li)}</p>'
     return f'''<div class="thanks" id="{tid}" tabindex="-1" hidden>
           <h3>You’re on the list.</h3>
           <p>Thank you. We’ll email you before Senva Health launches.</p>{extra}
         </div>'''
 
 
-def signup_band(source):
-    """The slim sign-up form in the middle of the home page and near the end of the About page."""
-    return f'''<section class="signup-band" id="join" aria-labelledby="band-title">
-    <div class="wrap band-inner">
-      <div>
-        <h2 id="band-title">Get first access when we launch.</h2>
-        <p>Join the waiting list and we’ll tell you before anyone else.</p>
-      </div>
-      <div>
-        <form class="signup-form compact" id="band-form" action="{FORM_ACTION}" method="POST" novalidate data-thanks="band-thanks">
-          {hidden_fields(source)}
-          <label class="field">Email
-            <input type="email" name="email" autocomplete="email" required>
-          </label>
-          <label class="consent">
-            <input type="checkbox" name="consent" value="yes" required>
-            <span>{CONSENT}</span>
-          </label>
-          <button class="button" type="submit">Join the waiting list</button>
-          <p class="form-status" id="band-status" role="status" aria-live="polite"></p>
-        </form>
-        {signup_thanks('band-thanks', False)}
-      </div>
-    </div>
-  </section>'''
+def join_card(source):
+    """The short sign-up form in the middle of the home page and near the end of the About page. It sits inside the
+    section before it, as a card, so it doesn't read as the end of the page."""
+    return f'''<aside class="join-card" id="join" aria-labelledby="band-title">
+        <div>
+          <h2 id="band-title">Get first access when we launch.</h2>
+          <p>Join the waiting list and we’ll tell you before anyone else.</p>
+        </div>
+        <div>
+          <form class="signup-form compact" id="band-form" action="{FORM_ACTION}" method="POST" novalidate data-thanks="band-thanks">
+            {hidden_fields(source)}
+            <label class="field">Email
+              <input type="email" name="email" autocomplete="email" required>
+            </label>
+            <label class="consent">
+              <input type="checkbox" name="consent" value="yes" required>
+              <span>{CONSENT}</span>
+            </label>
+            <button class="button" type="submit">Join the waiting list</button>
+            <p class="form-status" id="band-status" role="status" aria-live="polite"></p>
+          </form>
+          {signup_thanks('band-thanks', False)}
+        </div>
+      </aside>'''
 
 
 def founder_card(img, name, role):
@@ -518,10 +585,9 @@ def index_page():
       </ul>
       {ph('Details', 'check the report contents', 'Do these four parts match the report you plan to launch? Tell me anything to add or remove.')}
       {ph('Example', 'one next step from a report', 'One real example of a suggestion your report gives, for example on sleep or movement. It will be labelled as an example.')}{get_media}
+      {join_card('home page, mid-page form')}
     </div>
   </section>
-
-  {signup_band('home page, mid-page form')}
 
   <section class="section" id="science" aria-labelledby="science-title">
     <div class="wrap split">
@@ -653,24 +719,11 @@ def about_page():
     for iso, label, title, text in MILESTONES:
         extra = ''
         if title.startswith('Pitching'):
-            if SKERIC_EMBED:
-                post = f'''<div class="li-post" data-embed="{esc(SKERIC_EMBED)}" data-height="{esc(SKERIC_H)}">
-            <div class="li-post-gate">
-              <p><strong>The post on LinkedIn.</strong> It’s loaded from LinkedIn, which can set cookies, so it only appears if you ask for it.</p>
-              <div class="li-post-actions">
-                <button class="button button-quiet" type="button">Show the post</button>
-                <a href="{esc(SKERIC_URL or LI_ANTON)}">Open it on LinkedIn</a>
-              </div>
-            </div>
-          </div>'''
-            else:
-                post = ph('Code', 'the SKERIC post', 'On LinkedIn, click ⋯ on the post, choose “Embed this post” and send me the code. The post will show here, and load only when a visitor clicks.')
             extra = f'''
           <figure class="milestone-photo">
             {pitch_img('(max-width: 600px) calc(100vw - 64px), (max-width: 960px) calc(100vw - 96px), 620px')}
             <figcaption>Antón Carcedo pitching Senva at KTH Innovation.</figcaption>
           </figure>
-          {post}
           {ph('Photo', 'a newer event photo (optional)', 'The text on the slide in this photo is blurred. When you have a photo from a later event, send it and I’ll swap it in.')}'''
         elif title.startswith('First volunteer'):
             extra = '\n          ' + ph('Photo', 'from the lab (optional)', 'Sample tubes or the two of you at work. Nothing that shows another organisation’s name unless they have agreed.')
@@ -742,15 +795,6 @@ def about_page():
           <h2 class="section-title" id="journey-title">Our journey.</h2>
           <p class="section-lede">From a research idea at Umeå University to a test you can take at home.</p>
         </div>
-        <div class="follow">
-          <h3>Follow along on LinkedIn</h3>
-          <p>We post each step there first.</p>
-          <div class="follow-links">
-            {follow_links()}
-          </div>
-          {company_page_ph()}
-        </div>
-        <p class="share"><a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fsenvahealth.com%2F">Share Senva on LinkedIn</a></p>
       </div>
       <ol class="milestones" role="list">
 {chr(10).join(ms)}
@@ -764,10 +808,9 @@ def about_page():
       <p class="section-lede">Before launch, we’re testing the test. Volunteers give saliva samples, and repeat samples taken over time show whether results are consistent and how they change. We’ll share more as the work progresses.</p>
       {ph('Details', 'what you’re happy to share about validation', 'For example roughly how many volunteers, how far apart the repeat samples are, whether results are compared with established tests, and whether you plan to publish. Only what you’re happy to make public.')}
       {ph('Details', 'ethics approval (if you have it)', 'If the volunteer study has ethics approval, say so here, for example which authority approved it and when.')}
+      {join_card('about page, sign-up band')}
     </div>
   </section>
-
-  {signup_band('about page, sign-up band')}
 
   <section class="section dark" id="investors" aria-labelledby="investors-title">
     <div class="wrap">
@@ -852,6 +895,18 @@ if PREVIEW:
     for d in ['img', 'fonts']:
         shutil.copytree(PUBLIC / d, OUT / d, dirs_exist_ok=True)
 
+ASSISTANT_JS = assistant_js()
+(OUT / 'assistant.js').write_text(ASSISTANT_JS, encoding='utf-8')
+print('built', OUT / 'assistant.js')
+
+# The pages ask for styles.css and site.js with a version made from their contents (and the helper's answers), like
+# styles.css?v=1a2b3c4d. When any of them changes, the address changes, so browsers fetch the new file instead of
+# using a copy they kept. site.js passes the same version on to assistant.js. The preview opens from disk: no version.
+if not PREVIEW:
+    digest = hashlib.sha256((PUBLIC / 'styles.css').read_bytes() + (PUBLIC / 'site.js').read_bytes() + ASSISTANT_JS.encode('utf-8'))
+    ASSET_VERSION = '?v=' + digest.hexdigest()[:8]
+unversioned = lambda t: re.sub(r'\?v=[0-9a-f]{8}"', '"', t)
+
 old_lastmod = {}
 sitemap = OUT / 'sitemap.xml'
 if not PREVIEW and sitemap.exists():
@@ -862,7 +917,8 @@ entries = []
 for name, path, fn in PAGES:
     text = fn()
     target = OUT / name
-    changed = not target.exists() or target.read_text(encoding='utf-8') != text
+    # a new version of styles.css or site.js alone doesn't count as a change to the page in sitemap.xml
+    changed = not target.exists() or unversioned(target.read_text(encoding='utf-8')) != unversioned(text)
     target.write_text(text, encoding='utf-8')
     print(('built ' if changed else 'same  ') + str(target))
     if path and not PREVIEW:
