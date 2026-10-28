@@ -79,7 +79,12 @@ def head(title, desc, path, og_title, og_desc, og_type='website', jsonld=None, r
         ]
     parts += [
         '<meta name="theme-color" content="#053033">',
-        f'<link rel="icon" href="{root}favicon.ico" sizes="32x32">', f'<link rel="icon" href="{root}favicon.svg" type="image/svg+xml">',
+        # Icons, all made from the Senva symbol. The ?v=2 and the new file names make browsers that cached the old icon
+        # fetch the new one; keep these addresses from now on, since Google asks for a stable icon address. Google Search
+        # reads ICO and PNG but not SVG, and recommends an icon larger than 48 px, hence the 192 px PNG.
+        f'<link rel="icon" href="{root}favicon.ico?v=2" sizes="16x16 32x32 48x48">',
+        f'<link rel="icon" href="{root}icon-192.png" type="image/png" sizes="192x192">',
+        f'<link rel="icon" href="{root}icon.svg" type="image/svg+xml">',
         f'<link rel="apple-touch-icon" href="{root}apple-touch-icon.png">',
         f'<link rel="preload" href="{root}fonts/corben-400.woff2" as="font" type="font/woff2" crossorigin>',
     ]
@@ -842,7 +847,7 @@ PAGES = [('index.html', '/', index_page), ('about.html', '/about.html', about_pa
 OUT.mkdir(parents=True, exist_ok=True)
 if PREVIEW:
     # the preview is a full copy, so it opens from disk without the repository next to it
-    for name in ['styles.css', 'site.js', 'favicon.ico', 'favicon.svg', 'apple-touch-icon.png', 'logo.png', 'og.png']:
+    for name in ['styles.css', 'site.js', 'favicon.ico', 'icon.svg', 'icon-192.png', 'apple-touch-icon.png', 'logo.png', 'og.png']:
         shutil.copy2(PUBLIC / name, OUT / name)
     for d in ['img', 'fonts']:
         shutil.copytree(PUBLIC / d, OUT / d, dirs_exist_ok=True)

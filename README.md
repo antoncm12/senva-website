@@ -20,7 +20,7 @@ The menu at the top lists the home page's sections in the order they appear: How
 | `public/site.js` | Phone menu, highlighting the menu item for the section in view, LinkedIn posts that load on request, and the waiting-list forms |
 | `public/img/` | Photos (WebP in two or three sizes each) and the senva and senva health logos (SVG) |
 | `public/fonts/` | The brand fonts, Corben for headings and IBM Plex Sans Light for text, self-hosted (SIL Open Font Licence, see `fonts/OFL.txt`), so no visitor data goes to Google Fonts |
-| `public/favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, `logo.png` | Browser, phone and search-engine icons, made from the Senva symbol |
+| `public/favicon.ico`, `icon.svg`, `icon-192.png`, `apple-touch-icon.png`, `logo.png` | Browser, phone and search-engine icons, made from the Senva symbol. Google Search uses `favicon.ico`, `icon-192.png` or `apple-touch-icon.png` (it doesn't read SVG). Keep these file names, because Google asks for stable icon addresses |
 | `public/og.png` | Image shown when the link is shared, for example on LinkedIn |
 | `public/robots.txt`, `public/sitemap.xml` | Tell search engines what to index. The build updates `sitemap.xml` |
 | `public/_headers` | Security headers for statichost.eu |
