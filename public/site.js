@@ -138,7 +138,8 @@
           }
         })
         .catch(function () {
-          status.textContent = 'You weren’t added, because the form couldn’t be sent. Try again, or email anton.carcedo@umu.se.';
+          var contact = form.getAttribute('data-contact');
+          status.textContent = 'You weren’t added, because the form couldn’t be sent. Try again' + (contact ? ', or email ' + contact + '.' : '.');
           status.classList.add('error');
           button.disabled = false;
           button.textContent = buttonText;
@@ -149,12 +150,13 @@
 
 /* Question helper. It answers common questions with the written answers in assistant.js (made from the questions on
    the home page), entirely in the visitor's browser: nothing typed here is stored or sent anywhere. When it has no
-   answer, it offers to email one of us, from the visitor's own email program. */
+   answer, it offers to email us, from the visitor's own email program. The addresses come from _build/config.json. */
 (function () {
   var script = document.querySelector('script[src*="site.js"]');
   if (!script || !document.querySelector('main')) return;
   var base = script.src.replace(/site\.js(\?.*)?$/, '');
   var version = (script.src.match(/\?v=\w+$/) || [''])[0];
+  var support = script.getAttribute('data-support');
   var onDisk = location.protocol === 'file:';
   var data = null;
   var loading = false;
@@ -281,8 +283,8 @@
       var link = make('a', 'assist-contact');
       link.href = 'mailto:' + c.email + '?subject=' + encodeURIComponent('Question about Senva Health')
         + (lastQuestion ? '&body=' + encodeURIComponent(lastQuestion + '\n\n') : '');
-      link.appendChild(make('strong', '', 'Email ' + c.name.split(' ')[0]));
-      link.appendChild(make('span', '', c.name + ', ' + c.role + ', for ' + c.topics));
+      link.appendChild(make('strong', '', c.label));
+      link.appendChild(make('span', '', c.text));
       link.appendChild(make('span', 'assist-email', c.email));
       list.appendChild(link);
     });
@@ -354,7 +356,7 @@
       loading = false;
       log.innerHTML = '';
       add('bot', function (msg) {
-        msg.appendChild(make('p', '', 'The answers didn’t load. You can email us instead: anton.carcedo@umu.se or ake.brannstrom@umu.se.'));
+        msg.appendChild(make('p', '', 'The answers didn’t load.' + (support ? ' You can email us instead: ' + support + '.' : ' Try again later.')));
       });
     };
     document.head.appendChild(tag);

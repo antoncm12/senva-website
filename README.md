@@ -39,6 +39,7 @@ python3 _build/build_site.py
 - Text on the home and About pages (steps, what you get, questions, milestones, team): `_build/build_site.py`.
 - The science article and the privacy notice: `_build/science.main.html` and `_build/privacy.main.html`.
 - Links: `_build/config.json` (the founders' LinkedIn profiles, shown on the About page; a Senva company page on LinkedIn, which only goes into the data search engines read; the questionnaire; an analytics snippet). An empty value leaves that element out.
+- Email addresses: also in `_build/config.json`, used everywhere on the site. `EMAIL_CONTACT` is for the waiting list and general questions (footer, privacy notice, the sign-up forms' error message), `EMAIL_SUPPORT` is where the question helper sends people, and `EMAIL_INVESTORS` is for investors, partners and press (About page and the question helper). Change them there and rebuild; the build stops if one is missing.
 - Styling and behaviour: edit `public/styles.css` and `public/site.js` directly, then rebuild. The pages ask for both files with a version made from their contents (for example `styles.css?v=1a2b3c4d`), so visitors' browsers fetch the new files instead of using old copies. The brand colours are at the top of `styles.css`: deep teal `#053033`, teal `#0E5A67`, mint `#2AC8A5` and pale mint `#A6EDDE`.
 - The logo in the header is `_build/logo.svg.txt`; the footer and the kit section use `public/img/senva-logo.svg` and `public/img/senva-health-logo.svg`. All three come from the brand files (`Senva logopaket.ai`).
 - The build writes the five pages, `assistant.js` and `sitemap.xml` into `public/`, and sets today's date in `sitemap.xml` for each page that changed.
@@ -59,13 +60,13 @@ In `_build/build_site.py`, add a line to `MILESTONES` (date, label, title, text)
 
 ## Question helper
 
-The "Ask a question" button in the corner of every page opens a small helper. It answers with written answers only and never makes anything up: the answered questions in `FAQ`, plus the extra answers in `ASSIST_EXTRA`, both in `_build/build_site.py`. Each answer has a list of words that point to it (`ASSIST_KW` for the questions, `kw` for the extras). When only part of a question matches, it says the answer is the closest it has. When nothing matches, the helper offers to email Antón (the test and the science) or Åke (investors, partners and press) from the visitor's own email program. It runs in the browser: nothing typed into it is stored or sent anywhere.
+The "Ask a question" button in the corner of every page opens a small helper. It answers with written answers only and never makes anything up: the answered questions in `FAQ`, plus the extra answers in `ASSIST_EXTRA`, both in `_build/build_site.py`. Each answer has a list of words that point to it (`ASSIST_KW` for the questions, `kw` for the extras). When only part of a question matches, it says the answer is the closest it has. When nothing matches, the helper offers to email us (`EMAIL_SUPPORT`) or Åke (investors, partners and press, `EMAIL_INVESTORS`) from the visitor's own email program. It runs in the browser: nothing typed into it is stored or sent anywhere.
 
 To add an answer, add it to `ASSIST_EXTRA` with the words people might use, then rebuild. When a question in `FAQ` gets an answer, add its words to `ASSIST_KW`; the build stops and says so if you forget.
 
 ## Waiting list
 
-All forms post to the Formspree form `xzdopbyo`. If that form is restricted to certain domains in Formspree, add `senvahealth.com`. Each sign-up also records:
+All forms post to the Formspree form `xzdopbyo`, which emails each sign-up to the address chosen in Formspree (the form's Workflow, from the linked emails in your Formspree account). If that form is restricted to certain domains in Formspree, add `senvahealth.com`. Each sign-up also records:
 
 - `source`: which form was used (the card on the home page, the main form, or the card on the About page).
 - `campaign`: the campaign tags on the link the visitor arrived by. Tag links in posts and pitches like `https://senvahealth.com/?utm_source=linkedin&utm_campaign=skeric`.

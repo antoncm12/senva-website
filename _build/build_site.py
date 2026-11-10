@@ -30,6 +30,12 @@ CFG = json.load(open(HERE / 'config.json', encoding='utf-8'))
 LI_ANTON, LI_AKE, COMPANY_LI = CFG.get('LI_ANTON', ''), CFG.get('LI_AKE', ''), CFG.get('LI_COMPANY', '')
 QUESTIONNAIRE = CFG.get('QUESTIONNAIRE_URL', '')
 ANALYTICS_HEAD = CFG.get('ANALYTICS_HEAD', '')  # paste the snippet from Plausible here to switch analytics on
+# Where people write to: the waiting list and general questions, the question helper, and investors, partners and press
+for _k in ('EMAIL_CONTACT', 'EMAIL_SUPPORT', 'EMAIL_INVESTORS'):
+    if not re.fullmatch(r'[^@\s"<>]+@[^@\s"<>]+\.[a-z]{2,}', CFG.get(_k, ''), re.I):
+        sys.exit(f'Set {_k} in _build/config.json to an email address')
+EMAIL_CONTACT, EMAIL_SUPPORT, EMAIL_INVESTORS = CFG['EMAIL_CONTACT'], CFG['EMAIL_SUPPORT'], CFG['EMAIL_INVESTORS']
+mail = lambda addr: f'<a href="mailto:{addr}">{addr}</a>'
 FORM_ACTION = 'https://formspree.io/f/xzdopbyo'
 SCIENCE_UPDATED = '2026-10-23'
 esc = lambda s: html.escape(s, quote=True)
@@ -91,7 +97,7 @@ def head(title, desc, path, og_title, og_desc, og_type='website', jsonld=None, r
         parts.append(f'<link rel="preload" href="{root}fonts/ibm-plex-sans-300.woff2" as="font" type="font/woff2" crossorigin>')
     parts += [f'<link rel="stylesheet" href="{root}styles.css{ASSET_VERSION}">',
               "<script>document.documentElement.classList.add('js');</script>",
-              f'<script src="{root}site.js{ASSET_VERSION}" defer></script>']
+              f'<script src="{root}site.js{ASSET_VERSION}" data-support="{EMAIL_SUPPORT}" defer></script>']
     if ANALYTICS_HEAD and not PREVIEW:
         parts.append(ANALYTICS_HEAD)
     if jsonld:
@@ -148,11 +154,10 @@ def footer(page, root=''):
       <div>
         <h2>Contact</h2>
         <ul>
-          <li><a href="mailto:anton.carcedo@umu.se">anton.carcedo@umu.se</a></li>
-          <li><a href="mailto:ake.brannstrom@umu.se">ake.brannstrom@umu.se</a></li>
+          <li>{mail(EMAIL_CONTACT)}</li>
           <li><a href="{root}about.html#investors">Investors and partners</a></li>
         </ul>
-        {ph('Details', 'Senva email addresses', 'Once your @senvahealth.com email works, which addresses go here, for example hello@, support@ and privacy@.')}
+        {ph('Details', 'Senva email addresses', 'When your @senvahealth.com mailboxes work, put them in _build/config.json, for example hello@ here and support@ for the question helper.')}
       </div>
       <div>
         <h2>More</h2>
@@ -319,7 +324,7 @@ ASSIST_EXTRA = [
          links=[('about.html', 'About us')],
          kw=['founder', 'founders', 'team', 'company', 'behind', 'umeå', 'university', 'universitet', 'spin-out', 'spinout', 'startup', 'grundare', 'företag', 'about senva', 'based', 'located', 'where are you', 'where is senva', '~who', '~vem']),
     dict(id='partners', q='I’m an investor or a possible partner', a='Senva is at the pre-seed stage, funded through Umeå University Holding’s Venture Track programme. We’d like to hear from investors, labs and wellness companies, and organisations interested in a pilot around our launch in 2027. Write to Åke Brännström, CEO.',
-         links=[('about.html#investors', 'For investors and partners'), ('mailto:ake.brannstrom@umu.se', 'Email Åke')],
+         links=[('about.html#investors', 'For investors and partners'), ('mailto:' + EMAIL_INVESTORS, 'Email Åke')],
          kw=['invest', 'investor', 'investment', 'funding', 'partner', 'partnership', 'pilot', 'collaborate', 'collaboration', 'gym', 'press', 'journalist', 'media', 'business', 'investera', 'samarbete']),
     dict(id='science', q='How does your model work?', a='Epigenetic clocks estimate biological age from DNA methylation, small chemical tags on your DNA. Our own model was developed at Umeå University and is built for saliva. We don’t share the details of how it’s built, but our science page explains how epigenetic clocks work, with links to the research.',
          links=[('science.html', 'How epigenetic clocks work')],
@@ -346,8 +351,8 @@ ASSIST_EXTRA = [
 ASSIST_START = ['What is biological age?', 'How does it work?', 'What will my report show?', 'Is my data safe?', 'When can I order?', 'What will it cost?']
 
 ASSIST_CONTACTS = [
-    dict(name='Antón Carcedo', role='CTO', topics='the test and the science', email='anton.carcedo@umu.se'),
-    dict(name='Åke Brännström', role='CEO', topics='investors, partners and press', email='ake.brannstrom@umu.se'),
+    dict(label='Email us', text='For questions about the test, the waiting list or your data', email=EMAIL_SUPPORT),
+    dict(label='Email Åke', text='Åke Brännström, CEO, for investors, partners and press', email=EMAIL_INVESTORS),
 ]
 
 
@@ -435,7 +440,7 @@ def join_card(source):
           <p>Join the waiting list and we’ll tell you before anyone else.</p>
         </div>
         <div>
-          <form class="signup-form compact" id="band-form" action="{FORM_ACTION}" method="POST" novalidate data-thanks="band-thanks">
+          <form class="signup-form compact" id="band-form" action="{FORM_ACTION}" method="POST" novalidate data-contact="{EMAIL_CONTACT}" data-thanks="band-thanks">
             {hidden_fields(source)}
             <label class="field">Email
               <input type="email" name="email" autocomplete="email" required>
@@ -670,7 +675,7 @@ def index_page():
       </div>
 
       <div class="signup-card">
-        <form class="signup-form" id="signup-form" action="{FORM_ACTION}" method="POST" novalidate data-thanks="signup-thanks">
+        <form class="signup-form" id="signup-form" action="{FORM_ACTION}" method="POST" novalidate data-contact="{EMAIL_CONTACT}" data-thanks="signup-thanks">
           {hidden_fields('home page, main form')}
           <label class="field">Email
             <input type="email" name="email" autocomplete="email" required>
@@ -821,7 +826,7 @@ def about_page():
         <li><strong>Labs and wellness companies</strong> that would like to work with us.</li>
         <li><strong>Organisations interested in a pilot</strong> around our launch in 2027.</li>
       </ul>
-      <p class="contact-line">Write to Åke Brännström, CEO: <a href="mailto:ake.brannstrom@umu.se">ake.brannstrom@umu.se</a></p>
+      <p class="contact-line">Write to Åke Brännström, CEO: {mail(EMAIL_INVESTORS)}</p>
       {ph('File', 'one-page summary for investors', 'A one-page PDF about Senva that you’re happy to share publicly. A “Download our one-pager” link will go here.')}
       {ph('File', 'press kit', 'A one-page fact sheet, logo files and founder photos in one download, for journalists and partners.')}
     </div>
@@ -863,6 +868,8 @@ def privacy_page():
     else:
         analytics = '<p>We don’t use cookies, analytics or tracking on this site.</p>'
     main = read('privacy.main.html').strip()
+    assert '<!--EMAIL_CONTACT-->' in main, 'privacy.main.html needs <!--EMAIL_CONTACT--> where the contact address goes'
+    main = main.replace('<!--EMAIL_CONTACT-->', mail(EMAIL_CONTACT))
     main = main.replace('<!--ANALYTICS-->', analytics)
     main = main.replace('<!--PH:company-->', ph('Details', 'company and privacy contact', 'Once the company is registered: its legal name and organisation number, and a privacy@senvahealth.com address to use here.'))
     return page('privacy', h, main)
