@@ -36,7 +36,9 @@ for _k in ('EMAIL_CONTACT', 'EMAIL_SUPPORT', 'EMAIL_INVESTORS'):
         sys.exit(f'Set {_k} in _build/config.json to an email address')
 EMAIL_CONTACT, EMAIL_SUPPORT, EMAIL_INVESTORS = CFG['EMAIL_CONTACT'], CFG['EMAIL_SUPPORT'], CFG['EMAIL_INVESTORS']
 mail = lambda addr: f'<a href="mailto:{addr}">{addr}</a>'
-FORM_ACTION = 'https://formspree.io/f/xzdopbyo'
+FORM_ACTION = CFG.get('FORM_ACTION', '')  # where the waiting-list forms send sign-ups
+if not re.fullmatch(r'https://[^\s"<>]+', FORM_ACTION):
+    sys.exit('Set FORM_ACTION in _build/config.json to the https address the forms post to')
 SCIENCE_UPDATED = '2026-10-23'
 esc = lambda s: html.escape(s, quote=True)
 read = lambda name: (HERE / name).read_text(encoding='utf-8')

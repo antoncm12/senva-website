@@ -1,0 +1,28 @@
+# Secrets and personal settings: never commit these (ENGINEERING.md, section 2)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p8
+*.p12
+*.pfx
+*.jks
+*.keystore
+*service-account*.json
+.npmrc
+.netrc
+CLAUDE.local.md
+.claude/settings.local.json
+
+# Real data: never commit (ENGINEERING.md, section 3)
+data/
+*.idat
+*.sqlite
+*.dump
+
+# Operating system, editor and Python files
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc

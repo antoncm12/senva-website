@@ -82,7 +82,7 @@
   });
   var referrer = '';
   try {
-    if (document.referrer && new URL(document.referrer).host !== location.host) referrer = document.referrer.slice(0, 200);
+    if (document.referrer && new URL(document.referrer).host !== location.host) referrer = new URL(document.referrer).host;
   } catch (e) { referrer = ''; }
 
   Array.prototype.forEach.call(forms, function (form) {

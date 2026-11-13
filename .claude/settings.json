@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(!.env.example)",
+      "Read(*.pem)",
+      "Read(*.key)",
+      "Read(*.p8)",
+      "Read(*.p12)",
+      "Read(*.pfx)",
+      "Read(*.jks)",
+      "Read(*.keystore)",
+      "Read(*service-account*.json)",
+      "Read(.npmrc)",
+      "Read(.netrc)",
+      "Read(data/**)",
+      "Read(*.idat)",
+      "Read(*.sqlite)",
+      "Read(*.dump)"
+    ],
+    "ask": [
+      "Bash(git push *)"
+    ]
+  }
+}
