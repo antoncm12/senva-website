@@ -98,7 +98,7 @@ section + section { border-top: 1px solid var(--line); }
 .shift .b { position: absolute; top: 5px; height: 12px; border-radius: 3px; }
 .shift .w { font-size: 14px; color: var(--muted); }
 @media (max-width: 640px) { .shift { grid-template-columns: 1fr 110px; } .shift .tr { grid-column: 1 / -1; grid-row: 2; } }
-.tile .delta { position: absolute; top: 8px; right: 8px; font-size: 11px; font-weight: 500; border-radius: 999px; padding: 1px 7px; background: rgba(255,255,255,.85); color: var(--deep); }
+.tile .delta { font-size: 11.5px; font-weight: 500; margin-left: 4px; }
 .meter { position: relative; height: 22px; }
 .meter .t { position: absolute; left: 0; right: 0; top: 9px; height: 4px; border-radius: 2px; background: var(--line); }
 .meter .c { position: absolute; top: 0; width: 2px; height: 22px; background: #93A5A2; }
@@ -147,6 +147,18 @@ ul.try li { margin: 3px 0; }
 .sm1 { background: var(--bad1); color: var(--deep); }
 .sm2 { background: var(--bad2); color: var(--white); }
 .panel { position: sticky; top: 14px; }
+.keys { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.key { display: flex; flex-direction: column; gap: 8px; }
+.key .g { font-weight: 500; font-style: italic; font-size: 19px; }
+.key .id { font-size: 13px; color: var(--muted); font-style: normal; font-weight: 300; margin-left: 6px; }
+.stat { display: inline-block; font-size: 13.5px; font-weight: 500; border-radius: 10px; padding: 3px 10px; align-self: flex-start; }
+.key .pos { margin-top: 2px; }
+.key .more { margin-top: auto; align-self: flex-start; cursor: pointer; background: none; border: 0; padding: 4px 0; color: var(--teal); font-weight: 500; text-decoration: underline; text-underline-offset: 3px; }
+.key .more:focus-visible, .explore-btn:focus-visible { outline: 3px solid var(--deep); outline-offset: 2px; }
+.explore-btn { margin-top: 18px; cursor: pointer; display: inline-block; background: var(--white); border: 1px solid var(--teal); color: var(--teal); border-radius: 999px; padding: 10px 18px; font-weight: 500; }
+.explore-btn[aria-expanded="true"] { background: var(--teal); color: var(--white); }
+.explorer { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+.src-note { font-size: 13px; color: var(--muted); }
 .panel h3 { font-style: italic; }
 .panel .full { color: var(--muted); font-size: 15px; margin-top: 2px; }
 .panel dl { margin: 16px 0 0; display: grid; gap: 12px; }
@@ -198,10 +210,11 @@ footer img { height: 28px; width: auto; display: block; margin-bottom: 10px; }
   .sec-head { break-after: avoid; }
   .browser { grid-template-columns: 1fr; }
   .panel { display: none; }
+  .explore-btn, .key .more { display: none !important; }
+  .explorer { display: none !important; }
   .tile { min-height: 54px; }
   .tile .mod { display: none; }
   .sysd[hidden] { display: grid !important; }
-  .tile .delta { position: static; align-self: flex-start; padding: 0; background: none; }
   .sys .chev { display: none; }
   .page-break { break-before: page; }
   .tablewrap { overflow: visible; border: 0; }
@@ -338,35 +351,39 @@ footer img { height: 28px; width: auto; display: block; margin-bottom: 10px; }
   </div>
 </section>
 
-<!-- 5 · CpG browser -->
+<!-- 5 · key sites and the full browser -->
 <section class="page-break">
   <div class="wrap">
     <div class="sec-head">
       <p class="eyebrow">Explore your methylation</p>
       <h2>The sites behind your patterns</h2>
-      <p>Each tile is one place in your DNA where we measure methylation, named after the gene it sits in or next to. The colour shows where you are compared with people your age. The bars show how much research says that site can change with how you live. Select a tile to see what the gene does and what may move it.</p>
+      <p>We measure methylation at many places in your DNA. These five tell you most about your patterns: one for each pattern above, chosen because it sits outside the typical range for your age, moved since your last test, or is the clearest example of that pattern. A link between a site and a habit means they tend to go together, not that one causes the other.</p>
     </div>
-    <div class="legend">
-      <span><i class="sw s2"></i>▲ More favourable</span>
-      <span><i class="sw s1"></i>Slightly more favourable</span>
-      <span><i class="sw s0"></i>Typical for your age</span>
-      <span><i class="sw sm1"></i>Slightly less favourable</span>
-      <span><i class="sw sm2"></i>▼ Less favourable</span>
-      <span>↑↓ changed since test 1</span>
-      <span style="margin-left:auto">Can change: ▮▮▮ strong · ▮▮ some · ▮ little evidence</span>
+    <div class="keys" id="keys"></div>
+    <button class="explore-btn" id="exploreBtn" aria-expanded="false" aria-controls="explorer">Explore all <span id="siteCount"></span> sites</button>
+    <div class="explorer" id="explorer" hidden>
+      <p style="max-width:760px">Each tile is one site, named after the gene it sits in or next to. The colour shows where you are compared with people your age; the bars show how much research says the site can change with how you live. Select a tile to see what the gene does, what may move it and where the evidence comes from.</p>
+      <div class="legend" style="margin-top:14px">
+        <span><i class="sw s2"></i>▲ More favourable</span>
+        <span><i class="sw s1"></i>Slightly more favourable</span>
+        <span><i class="sw s0"></i>Typical for your age</span>
+        <span><i class="sw sm1"></i>Slightly less favourable</span>
+        <span><i class="sw sm2"></i>▼ Less favourable</span>
+        <span>↑↓ changed since test 1</span>
+        <span style="margin-left:auto">Can change: ▮▮▮ strong · ▮▮ some · ▮ little evidence</span>
+      </div>
+      <div class="filters" role="group" aria-label="Filter sites">
+        <button class="chip" data-f="all" aria-pressed="true">All sites</button>
+        <button class="chip" data-f="improve" aria-pressed="false">Room to improve</button>
+        <button class="chip" data-f="change" aria-pressed="false">Can change with lifestyle</button>
+        <button class="chip" data-f="moved" aria-pressed="false">Changed since test 1</button>
+      </div>
+      <div class="browser">
+        <div class="heat" id="heat"></div>
+        <aside class="panel card" id="panel" aria-live="polite"></aside>
+      </div>
     </div>
-    <div class="filters no-print" role="group" aria-label="Filter sites">
-      <button class="chip" data-f="all" aria-pressed="true">All sites</button>
-      <button class="chip" data-f="improve" aria-pressed="false">Room to improve</button>
-      <button class="chip" data-f="change" aria-pressed="false">Can change with lifestyle</button>
-      <button class="chip" data-f="moved" aria-pressed="false">Changed since test 1</button>
-    </div>
-    <div class="browser">
-      <div class="heat" id="heat"></div>
-      <aside class="panel card" id="panel" aria-live="polite"></aside>
-    </div>
-    <p class="small muted" style="margin-top:14px">Example sites from published research, not the sites Senva’s model uses. Most of what is known about them comes from studies of blood; saliva contains white blood cells and cheek cells, so each site has to be checked in saliva before it is shown to customers. A link between a site and a habit or trait is an association: methylation often follows the trait rather than causing it [10].</p>
-    <div class="print-only" id="printTable" style="margin-top:18px"></div>
+    <div class="print-only" style="margin-top:22px"><h3>All sites measured in your sample</h3><div id="printTable" style="margin-top:10px"></div></div>
   </div>
 </section>
 
@@ -440,7 +457,8 @@ footer img { height: 28px; width: auto; display: block; margin-bottom: 10px; }
     "Sehgal R, et al. Systems Age: a single blood methylation test to quantify aging heterogeneity across 11 physiological systems. Nat Aging. 2025. doi:10.1038/s43587-025-00958-3.",
     "World Health Organization. WHO guidelines on physical activity and sedentary behaviour. Geneva: WHO; 2020.",
     "Anderson BO, et al. Health and cancer risks associated with low levels of alcohol consumption. Lancet Public Health. 2023;8:e6–e7 (WHO Europe statement).",
-    "Blomhoff R, et al. Nordic Nutrition Recommendations 2023. Copenhagen: Nordic Council of Ministers; 2023."
+    "Blomhoff R, et al. Nordic Nutrition Recommendations 2023. Copenhagen: Nordic Council of Ministers; 2023.",
+    "Jung SE, et al. DNA methylation of the ELOVL2, FHL2, KLF14, C1orf132/MIR29B2C, and TRIM59 genes for age prediction from blood, saliva, and buccal swab samples. Forensic Sci Int Genet. 2019;38:1–8."
   ];
 
   var SYSTEMS = [
@@ -510,113 +528,113 @@ footer img { height: 28px; width: auto; display: block; margin-bottom: 10px; }
       link: "Methylation here rises steadily with age, in blood and in saliva. It is one of the most reliable single markers of age. In mice, losing the enzyme speeds up age-related changes in the eye.",
       dir: "Lower than typical for your age is the younger pattern.",
       change: "No study shows that a habit changes this site on its own. It is best read as part of your overall biological age.",
-      refs: [1, 2, 3, 5] },
+      refs: [1, 2, 3, 5, 21], ev: "saliva" },
     { id: "cg06639320", gene: "FHL2", full: "Four and a half LIM domains 2", theme: "age", s: 0, mod: 1,
       fn: "A protein that helps switch other genes on and off, active in heart and muscle tissue.",
       link: "Methylation rises with age. It is used in age estimates from blood and other tissues.",
       dir: "Lower than typical for your age is the younger pattern.",
       change: "Little evidence about changing it. Read it as part of your biological age.",
-      refs: [3] },
+      refs: [3, 21], ev: "saliva" },
     { id: "cg14361627", gene: "KLF14", full: "Krüppel-like factor 14", theme: "age", s: 1, mod: 1,
       fn: "A transcription factor that regulates many genes in fat tissue.",
       link: "Methylation rises with age. It is one of seven markers that estimate age from saliva in a published method.",
       dir: "Lower than typical for your age is the younger pattern.",
       change: "Little evidence about changing it. Read it as part of your biological age.",
-      refs: [3, 4] },
+      refs: [3, 4, 21], ev: "saliva" },
     { id: "cg00481951", gene: "SST", full: "Somatostatin", theme: "age", s: 0, mod: 1,
       fn: "A hormone that dampens the release of other hormones, including insulin and growth hormone.",
       link: "Methylation rises with age in saliva. It is another of the seven saliva age markers.",
       dir: "Lower than typical for your age is the younger pattern.",
       change: "Little evidence about changing it.",
-      refs: [4] },
+      refs: [4], ev: "saliva" },
     { id: "cg07553761", gene: "TRIM59", full: "Tripartite motif containing 59", theme: "age", s: -1, p: 0, mod: 1,
       fn: "An enzyme that tags proteins for removal, involved in immune signalling.",
       link: "Methylation rises with age.",
       dir: "Lower than typical for your age is the younger pattern.",
       change: "Little evidence about changing it.",
-      refs: [3] },
+      refs: [3, 21], ev: "saliva" },
     { id: "cg10501210", gene: "MIR29B2CHG", full: "Host gene of microRNAs miR-29b and miR-29c (also called C1orf132)", theme: "age", s: 1, mod: 1,
       fn: "Carries microRNAs that fine-tune how tissues repair and remodel themselves.",
       link: "Methylation falls with age.",
       dir: "Higher than typical for your age is the younger pattern.",
       change: "Little evidence about changing it.",
-      refs: [3] },
+      refs: [3, 21], ev: "saliva" },
 
     { id: "cg05575921", gene: "AHRR", full: "Aryl hydrocarbon receptor repressor", theme: "smoke", s: 1, mod: 3,
       fn: "A brake on the aryl hydrocarbon receptor, which senses compounds in tobacco smoke and helps the body break them down.",
       link: "The site most strongly linked to smoking: methylation is lower in people who smoke, and lower the more they smoke.",
       dir: "Higher is the pattern of people who don’t smoke.",
       change: "Stopping smoking. In a study of about 16,000 people, most smoking-linked sites returned to never-smoker levels within five years, though some stay changed for decades.",
-      refs: [6] },
+      refs: [6], ev: "blood" },
     { id: "cg03636183", gene: "F2RL3", full: "F2R like thrombin or trypsin receptor 3 (PAR4)", theme: "smoke", s: 1, mod: 3,
       fn: "A receptor on blood platelets that responds to thrombin, a protein in blood clotting.",
       link: "Methylation is lower in people who smoke.",
       dir: "Higher is the pattern of people who don’t smoke.",
       change: "Stopping smoking; the site moves back towards never-smoker levels over years.",
-      refs: [6, 7] },
+      refs: [6, 7], ev: "blood" },
     { id: "cg19859270", gene: "GPR15", full: "G protein-coupled receptor 15", theme: "smoke", s: 0, mod: 3,
       fn: "A receptor that guides certain immune cells (T cells) to the gut.",
       link: "Methylation is lower in people who smoke, partly because smoking increases the immune cells that carry this receptor.",
       dir: "Higher is the pattern of people who don’t smoke.",
       change: "Stopping smoking.",
-      refs: [6] },
+      refs: [6], ev: "blood" },
 
     { id: "cg06690548", gene: "SLC7A11", full: "Solute carrier family 7 member 11 (xCT)", theme: "alc", s: -1, p: -2, mod: 2,
       fn: "A transporter that brings cystine into cells, which they use to make the antioxidant glutathione.",
       link: "One of the sites most strongly linked to alcohol: methylation is lower in people who drink more.",
       dir: "Higher is the pattern of people who drink little.",
       change: "Drinking less. The evidence that this site moves back is limited and comes from small studies. Yours has moved since test 1, which fits the step you chose, but one change between two tests can’t show what caused it.",
-      refs: [8] },
+      refs: [8], ev: "blood" },
 
     { id: "cg10636246", gene: "AIM2", full: "Absent in melanoma 2", theme: "inf", s: 0, p: -1, mod: 2,
       fn: "A sensor inside immune cells that detects DNA in the wrong place, for example from a virus, and starts an inflammatory response.",
       link: "Methylation is lower in people with higher long-term, low-level inflammation.",
       dir: "Higher is the pattern of lower inflammation.",
       change: "Habits that lower long-term inflammation, such as not smoking, regular movement and keeping a healthy weight, may move it. Direct evidence for this site is limited.",
-      refs: [9] },
+      refs: [9], ev: "blood" },
     { id: "cg18608055", gene: "SBNO2", full: "Strawberry notch homolog 2", theme: "inf", s: 0, mod: 2,
       fn: "Switched on by the anti-inflammatory signal IL-10; helps calm inflammation down.",
       link: "Methylation is lower in people with higher low-level inflammation.",
       dir: "Higher is the pattern of lower inflammation.",
       change: "As for AIM2: general anti-inflammatory habits may move it; direct evidence is limited.",
-      refs: [9] },
+      refs: [9], ev: "blood" },
     { id: "cg18181703", gene: "SOCS3", full: "Suppressor of cytokine signalling 3", theme: "inf", s: -1, mod: 2,
       fn: "A brake on signals from inflammatory messengers such as IL-6, and on the hormones leptin and insulin.",
       link: "Methylation is lower in people with higher low-level inflammation and with higher body weight.",
       dir: "Higher is the pattern of lower inflammation.",
       change: "Moving more, eating a Nordic or Mediterranean-style diet and keeping a healthy weight may move it.",
-      refs: [9, 10] },
+      refs: [9, 10], ev: "blood" },
     { id: "cg12992827", gene: "NFKBIZ", full: "NF-κB inhibitor zeta", theme: "inf", s: 0, mod: 2,
       fn: "A regulator of NF-κB, the main switch for inflammatory genes in immune cells.",
       link: "Methylation is lower in people with higher low-level inflammation.",
       dir: "Higher is the pattern of lower inflammation.",
       change: "General anti-inflammatory habits may move it; direct evidence is limited.",
-      refs: [9] },
+      refs: [9], ev: "blood" },
 
     { id: "cg00574958", gene: "CPT1A", full: "Carnitine palmitoyltransferase 1A", theme: "fat", s: 0, p: -1, mod: 2,
       fn: "Carries fatty acids into mitochondria so they can be burned for energy.",
       link: "Methylation is lower in people with higher blood fats (triglycerides) and higher body weight.",
       dir: "Higher is the pattern of lower blood fats.",
       change: "Because it mostly follows blood fats and body weight, changes in diet and weight may move it.",
-      refs: [10, 12] },
+      refs: [10, 12], ev: "blood" },
     { id: "cg06500161", gene: "ABCG1", full: "ATP binding cassette subfamily G member 1", theme: "fat", s: -1, mod: 2,
       fn: "Pumps cholesterol out of cells so it can be carried away by HDL particles.",
       link: "Methylation is higher in people with higher body weight and blood fats.",
       dir: "Lower is the pattern of lower blood fats.",
       change: "Diet, movement and weight may move it, because it mostly follows them.",
-      refs: [10, 12] },
+      refs: [10, 12], ev: "blood" },
     { id: "cg11024682", gene: "SREBF1", full: "Sterol regulatory element binding transcription factor 1", theme: "fat", s: 0, mod: 2,
       fn: "A master switch for the genes that make fat and cholesterol.",
       link: "Methylation is higher in people with higher body weight.",
       dir: "Lower is the pattern of lower body weight.",
       change: "Weight change may move it, because it mostly follows body weight.",
-      refs: [10] },
+      refs: [10], ev: "blood" },
     { id: "cg22891070", gene: "HIF3A", full: "Hypoxia inducible factor 3 subunit alpha", theme: "fat", s: 0, mod: 2,
       fn: "Part of the system cells use to sense and respond to oxygen levels.",
       link: "The first site found to be linked to body weight: methylation is higher in people with higher BMI.",
       dir: "Lower is the pattern of lower body weight.",
       change: "Weight change may move it, because it mostly follows body weight.",
-      refs: [10, 11] }
+      refs: [10, 11], ev: "blood" }
   ];
 
   CPGS.forEach(function (c) { if (c.p === undefined) c.p = c.s; });
@@ -638,6 +656,7 @@ footer img { height: 28px; width: auto; display: block; margin-bottom: 10px; }
   function word(s) { return ["Less favourable", "Slightly less favourable", "Typical for your age", "Slightly more favourable", "More favourable"][s + 2]; }
   function modWord(m) { return ["", "Little evidence", "Some evidence", "Strong evidence"][m]; }
   function cite(list) { return list.map(function (n) { return "[" + n + "]"; }).join(" "); }
+  function evWord(c) { return c.ev === "saliva" ? "Studied in saliva as well as blood." : "Mainly from blood studies. Saliva holds white blood cells and cheek cells, so the link may be weaker in saliva."; }
 
   // systems
   var lo = 33, hi = 57;
@@ -719,9 +738,8 @@ footer img { height: 28px; width: auto; display: block; margin-bottom: 10px; }
       items.map(function (c) {
         var arrow = c.s > 0 ? "▲ " : c.s < 0 ? "▼ " : "";
         return '<button class="tile ' + cls(c.s) + '" data-id="' + c.id + '" aria-pressed="false" aria-label="' + esc(c.gene + ", " + word(c.s) + ", can change: " + modWord(c.mod).toLowerCase()) + '">' +
-          (c.s !== c.p ? '<span class="delta">' + (c.s > c.p ? "↑" : "↓") + " since test 1</span>" : "") +
           '<span class="g">' + esc(c.gene) + '</span><span class="id">' + c.id + '</span>' +
-          '<span class="foot"><span>' + arrow + '</span><span class="mod" aria-hidden="true"><i style="height:6px" class="' + (c.mod >= 1 ? "on" : "") + '"></i><i style="height:9px" class="' + (c.mod >= 2 ? "on" : "") + '"></i><i style="height:12px" class="' + (c.mod >= 3 ? "on" : "") + '"></i></span></span></button>';
+          '<span class="foot"><span>' + arrow + (c.s !== c.p ? '<span class="delta">' + (c.s > c.p ? "↑" : "↓") + " since test 1</span>" : "") + '</span><span class="mod" aria-hidden="true"><i style="height:6px" class="' + (c.mod >= 1 ? "on" : "") + '"></i><i style="height:9px" class="' + (c.mod >= 2 ? "on" : "") + '"></i><i style="height:12px" class="' + (c.mod >= 3 ? "on" : "") + '"></i></span></span></button>';
       }).join("") + "</div></div>";
   }).join("");
 
@@ -738,12 +756,49 @@ footer img { height: 28px; width: auto; display: block; margin-bottom: 10px; }
       '<p class="small" style="margin-top:6px">' + (c.s === c.p ? '<span class="muted">Same as at test 1.</span>' : "<b>Test 1:</b> " + word(c.p).toLowerCase() + " → <b>now:</b> " + word(c.s).toLowerCase() + ".") + "</p>" +
       "<dl><div><dt>What the gene does</dt><dd>" + esc(c.fn) + "</dd></div>" +
       "<div><dt>What studies link this site to</dt><dd>" + esc(c.link) + "</dd></div>" +
+      "<div><dt>Where the evidence comes from</dt><dd>" + esc(evWord(c)) + "</dd></div>" +
       '<div><dt>Can it change?</dt><dd><span class="ev">' + modWord(c.mod) + "</span></dd></div>" +
       "<div><dt>What may move it</dt><dd>" + esc(c.change) + "</dd></div>" +
       '<div><dt>Sources</dt><dd class="refs-inline">' + cite(c.refs) + " · see References</dd></div></dl>";
   }
   heat.addEventListener("click", function (e) { var b = e.target.closest(".tile"); if (b) show(b.getAttribute("data-id")); });
-  show("cg06690548");
+
+  // key sites: one per pattern. Less favourable than typical first, then moved since the last test,
+  // then furthest from typical; ties go to the site with most evidence that lifestyle changes it.
+  function keyFor(theme) {
+    return CPGS.map(function (c, i) { return { c: c, i: i }; }).filter(function (x) { return x.c.theme === theme; })
+      .sort(function (a, b) {
+        return ((a.c.s < 0 ? 0 : 1) - (b.c.s < 0 ? 0 : 1)) || ((a.c.s !== a.c.p ? 0 : 1) - (b.c.s !== b.c.p ? 0 : 1)) ||
+          (Math.abs(b.c.s) - Math.abs(a.c.s)) || (b.c.mod - a.c.mod) || (a.i - b.i);
+      })[0].c;
+  }
+  var KEYS = THEMES.map(function (t) { return keyFor(t.key); });
+  function statStyle(sv) { return sv === 2 ? "background:var(--good2);color:var(--white)" : sv === 1 ? "background:var(--good1)" : sv === 0 ? "background:var(--mid)" : sv === -1 ? "background:var(--bad1)" : "background:var(--bad2);color:var(--white)"; }
+  document.getElementById("keys").innerHTML = KEYS.map(function (c) {
+    var th = THEMES.filter(function (t) { return t.key === c.theme; })[0];
+    return '<div class="card key"><p class="eyebrow">' + esc(th.name) + '</p>' +
+      '<p><span class="g">' + esc(c.gene) + '</span><span class="id">' + c.id + '</span></p>' +
+      '<span class="stat" style="' + statStyle(c.s) + '">' + (c.s > 0 ? "▲ " : c.s < 0 ? "▼ " : "") + esc(word(c.s)) + "</span>" +
+      '<p class="small muted">' + (c.s === c.p ? "Same as at test 1" : (c.s > c.p ? "↑ More favourable than at test 1" : "↓ Less favourable than at test 1")) + "</p>" +
+      '<p class="small">' + esc(c.fn) + "</p>" +
+      '<p class="src-note">Can change: ' + esc(modWord(c.mod).toLowerCase()) + ". " + (c.ev === "saliva" ? "Studied in saliva." : "Evidence mainly from blood studies.") + "</p>" +
+      '<button class="more" data-id="' + c.id + '">More about this site</button></div>';
+  }).join("");
+  document.getElementById("siteCount").textContent = CPGS.length;
+
+  var exploreBtn = document.getElementById("exploreBtn"), explorer = document.getElementById("explorer");
+  function setExplorer(open) {
+    explorer.hidden = !open;
+    exploreBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    exploreBtn.firstChild.textContent = open ? "Hide the full list of " : "Explore all ";
+  }
+  exploreBtn.addEventListener("click", function () { setExplorer(explorer.hidden); });
+  document.getElementById("keys").addEventListener("click", function (e) {
+    var b = e.target.closest(".more"); if (!b) return;
+    setExplorer(true); show(b.getAttribute("data-id"));
+    explorer.scrollIntoView({ block: "start" });
+  });
+  show(KEYS[2].id);
 
   Array.prototype.forEach.call(document.querySelectorAll(".chip"), function (ch) {
     ch.addEventListener("click", function () {
@@ -760,7 +815,7 @@ footer img { height: 28px; width: auto; display: block; margin-bottom: 10px; }
   // printed table of all sites
   document.getElementById("printTable").innerHTML = '<div class="tablewrap"><table class="rt"><tr><th>Site</th><th>You (test 1 → now)</th><th>What the gene does</th><th>Linked to</th><th>What may move it</th></tr>' +
     CPGS.map(function (c) {
-      return "<tr><td><i>" + esc(c.gene) + "</i><br><span class=\"muted\">" + c.id + "</span></td><td>" + (c.s !== c.p ? esc(word(c.p)) + " → " : "") + esc(word(c.s)) + "<br><span class=\"muted\">" + esc(modWord(c.mod)) + "</span></td><td>" + esc(c.fn) + "</td><td>" + esc(c.link) + " " + cite(c.refs) + "</td><td>" + esc(c.change) + "</td></tr>";
+      return "<tr><td><i>" + esc(c.gene) + "</i><br><span class=\"muted\">" + c.id + "</span></td><td>" + (c.s !== c.p ? esc(word(c.p)) + " → " : "") + esc(word(c.s)) + "<br><span class=\"muted\">" + esc(modWord(c.mod)) + "</span></td><td>" + esc(c.fn) + "</td><td>" + esc(c.link) + " " + cite(c.refs) + '<br><span class="muted">' + esc(evWord(c)) + "</span></td><td>" + esc(c.change) + "</td></tr>";
     }).join("") + "</table></div>";
 
   // future features
