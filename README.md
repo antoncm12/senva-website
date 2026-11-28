@@ -15,6 +15,7 @@ All work on this repository, and on all Senva software, follows [`ENGINEERING.md
 | `public/science.html` | Article on epigenetic clocks and biological age, with links to the research |
 | `public/privacy.html` | Privacy notice for the waiting list |
 | `public/404.html` | Shown for addresses that don't exist |
+| `public/example-report.html` | Example report for a fictional customer, Alex. Hidden: marked `noindex, nofollow`, and not linked from the site or the sitemap, though anyone with the address can open it. It is one self-contained file, with the fonts and logo inside it, made from the report mock-up's source outside this repository and not by `_build/`: replace the whole file to update it, and keep the robots tag |
 
 The menu at the top lists the home page's sections in the order they appear: How it works, What you get, Science, Questions and About. The Science and About sections each lead on to their own page, and on those pages their menu item links to the page itself.
 
