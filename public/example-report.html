@@ -237,24 +237,7 @@ ul.try li { margin: 4px 0; }
 .day.int { background: #FCF0EA; border-color: #F1D3C6; }
 .day.rest { background: #F7F9F8; }
 @media (max-width: 760px) { .week { grid-template-columns: 1fr; gap: 6px; } .day { min-height: 0; flex-direction: row; align-items: baseline; flex-wrap: wrap; gap: 4px 12px; padding: 9px 12px; } .day .dn { width: 36px; flex: none; } }
-.zwrap { position: relative; padding-top: 26px; margin-top: 14px; }
-.zbar { display: flex; height: 18px; border-radius: 9px; overflow: hidden; }
-.zbar span { height: 100%; }
-.zint { position: absolute; top: 0; height: 22px; border: 2px solid var(--deep); border-bottom: 0; border-radius: 6px 6px 0 0; font-size: 11.5px; font-weight: 500; color: var(--deep); text-align: center; line-height: 17px; }
-.zticks { position: relative; height: 20px; font-size: 12px; color: var(--muted); margin-top: 4px; }
-.zticks span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
-.zlist { display: grid; gap: 8px; margin-top: 12px; font-size: 14.5px; }
-.zlist div { display: grid; grid-template-columns: 16px 220px minmax(0, 1fr); gap: 10px; align-items: baseline; }
-.zlist i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; transform: translateY(2px); }
-@media (max-width: 560px) { .zlist div { grid-template-columns: 16px minmax(0, 1fr); } .zlist div span:last-child { grid-column: 2; } }
-.ex { display: grid; grid-template-columns: 30px minmax(0, 1fr) 132px; gap: 12px; padding: 13px 0; border-top: 1px solid var(--line); }
-.ex .no { width: 28px; height: 28px; border-radius: 8px; background: var(--soft); color: var(--accent); font-weight: 500; font-size: 13.5px; display: flex; align-items: center; justify-content: center; }
-.ex .nm { font-weight: 500; }
-.ex .how { font-size: 14.5px; color: var(--ink2); margin-top: 2px; }
-.ex .alt { font-size: 13px; color: var(--muted); margin-top: 4px; }
-.ex .dose { text-align: right; font-weight: 500; font-size: 15px; }
-.ex .dose span { display: block; font-weight: 300; font-size: 12.5px; color: var(--muted); }
-@media (max-width: 560px) { .ex { grid-template-columns: 30px minmax(0, 1fr); } .ex .dose { grid-column: 2; text-align: left; } .ex .dose span { display: inline; margin-left: 6px; } }
+.pt-cta { background: var(--soft); border-color: #CFE7E1; }
 .safety { margin-top: 14px; padding: 14px 16px; border-radius: 12px; background: #FBF3F1; border: 1px solid #F0D6D0; font-size: 14.5px; }
 .safety b { color: var(--neg); }
 .fb { display: grid; grid-template-columns: 230px minmax(0, 1fr); gap: 16px; align-items: center; padding: 12px 0; border-top: 1px solid var(--line); }
@@ -426,7 +409,7 @@ table.rt th { font-weight: 500; color: var(--accent); background: var(--soft); }
   .print-only { display: block; }
   .sec { padding: 14px 0 4px; }
   .sec + .sec { margin-top: 14px; }
-  .card, .kpi, .focus, .sys, .tile, tr, .review, .ex, .fb, .opt, .conn, .day, .meal, .contrib, .shift, .safety, .note { break-inside: avoid; }
+  .card, .kpi, .focus, .sys, .tile, tr, .review, .fb, .opt, .conn, .day, .meal, .contrib, .shift, .safety, .note { break-inside: avoid; }
   .sec-head, h2, h3, .eyebrow { break-after: avoid; }
   .sysd[hidden] { display: grid !important; }
   .sys .chev { display: none; }
@@ -626,42 +609,33 @@ table.rt th { font-weight: 500; color: var(--accent); background: var(--soft); }
     <h3 class="ptitle">Training</h3>
     <div class="card">
       <h3>Eight weeks of strength and intervals</h3>
-      <p style="margin-top:6px">Start next week. Each week has two strength sessions, one interval session and two longer walks or rides. Together with your daily walking, this meets the WHO advice of 150–300 minutes of moderate activity a week and strength training on two days [18].</p>
+      <p style="margin-top:6px">Start next week: two strength sessions, one interval session and two longer walks or rides a week. Together with your daily walking, this meets the WHO advice of 150–300 minutes of moderate activity a week and strength training on two days [18].</p>
       <div class="week" id="week"></div>
-    </div>
-    <div class="card mt">
-      <h3>Your heart-rate zones</h3>
-      <p class="small" style="margin-top:6px">From your resting heart rate (60, from your ring) and an estimated maximum of 177 for your age (208 − 0.7 × age [25]), using the heart-rate reserve method [26]. If you have measured your maximum in a test, add it in the app and we’ll use it instead.</p>
-      <div class="zwrap" id="zones"></div>
-      <div class="zlist" id="zlist"></div>
-    </div>
-    <div class="grid mt">
-      <div class="card"><h3>Strength A · Monday</h3><p class="xs muted" style="margin:4px 0 6px">About 45 minutes, with dumbbells and a bench</p><div id="strA"></div></div>
-      <div class="card"><h3>Strength B · Friday</h3><p class="xs muted" style="margin:4px 0 6px">About 45 minutes, with dumbbells, a bench and a band or cable</p><div id="strB"></div></div>
     </div>
     <div class="grid g2 mt">
       <div class="card">
-        <h3>How hard, and how to progress</h3>
+        <h3>Strength, twice a week</h3>
+        <p class="small" style="margin-top:6px">About 45 minutes with dumbbells and a bench. Three sets of 8–12 repetitions of each exercise, with a weight you could lift two or three more times. Add weight when it gets easy.</p>
         <ul class="try">
-          <li>Warm up for 5–8 minutes, then do one light set of the first exercise.</li>
-          <li>Choose a weight you could lift two or three more times at the end of each set.</li>
-          <li>Weeks 1–2: two sets of each exercise, to learn the movements. Weeks 3–8: three sets.</li>
-          <li>When you can do the top of the range in every set with good form, add the smallest step of weight (1–2 kg).</li>
-          <li>Rest 60–90 seconds between sets.</li>
+          <li><b>Monday:</b> squat, push-up, row, Romanian deadlift and a core exercise.</li>
+          <li><b>Friday:</b> split squat, shoulder press, pulldown, hip thrust and side plank.</li>
         </ul>
       </div>
       <div class="card">
-        <h3>4 × 4 intervals · Wednesday</h3>
-        <ul class="try">
-          <li>10 minutes easy, in your moderate zone (107–129).</li>
-          <li>4 minutes hard at 150–168, then 3 minutes easy. Repeat four times.</li>
-          <li>5 minutes easy to finish.</li>
-          <li>Weeks 1–2: three rounds of 3 minutes. From week 3: four rounds of 4 minutes.</li>
-        </ul>
-        <p class="small muted" style="margin-top:8px">This is the 4 × 4 method from Norwegian research [27]. Running, cycling, rowing, uphill walking or a cross-trainer all work. Hard means you can only say a few words.</p>
+        <h3>Intervals, once a week</h3>
+        <p class="small" style="margin-top:6px">The 4 × 4 method [27]: warm up for 10 minutes, then four rounds of 4 minutes hard and 3 minutes easy. Running, cycling, rowing or walking uphill all work.</p>
+        <p class="small" style="margin-top:10px" id="zoneLine"></p>
       </div>
     </div>
-    <div class="safety"><b>Before you start.</b> If you have a heart condition, high blood pressure or another long-term condition, if you have had chest pain or dizziness, or if you haven’t trained hard for a long time, talk to a doctor before you do the intervals. Stop and seek care if you feel chest pain, faintness or unusual breathlessness.<div class="btns" style="margin-top:10px"><button class="btn sm" data-act="msg-doctor">Ask our doctor</button><button class="btn ghost sm" data-act="book-pt">Book a trainer</button><button class="btn ghost sm" data-act="watch-export">Send the workouts to my wearable</button></div></div>
+    <div class="card care pt-cta mt">
+      <div class="ava" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h2M19 12h2M5 8v8M19 8v8M8 6v12M16 6v12M8 12h8"/></svg></div>
+      <div>
+        <h3>Want more detail, or a plan made for you?</h3>
+        <p class="small" style="margin-top:6px">A personal trainer from our partner network can show you each exercise, check your form and build a plan around your goals, your week and the equipment you have. If you choose to share them, your trainer sees your plan and your wearable data, never your methylation results.</p>
+        <div class="btns"><button class="btn" data-act="pt-plan">Get a personalised plan</button><button class="btn ghost" data-act="msg-pt">Ask a trainer</button></div>
+      </div>
+    </div>
+    <div class="safety"><b>Before you start.</b> If you have a heart condition, high blood pressure or another long-term condition, if you have had chest pain or dizziness, or if you haven’t trained hard for a long time, talk to a doctor before you do the intervals. Stop and seek care if you feel chest pain, faintness or unusual breathlessness.<div class="btns" style="margin-top:10px"><button class="btn sm" data-act="msg-doctor">Ask our doctor</button><button class="btn ghost sm" data-act="watch-export">Send the workouts to my wearable</button></div></div>
     <p class="why"><b>Why you see this:</b> your ring shows 165 active minutes a week, up from 70, so you now meet the WHO advice for moderate activity. The next step is strength and some harder training, which build the fitness that research links to the pattern behind your heart and circulation indicator.</p>
   </div>
 
@@ -1142,32 +1116,19 @@ table.rt th { font-weight: 500; color: var(--accent); background: var(--soft); }
   // heart-rate zones: Tanaka maximum, heart-rate reserve (ACSM), 4 × 4 at 85–95 % of maximum
   var AGE = 45, REST = 60, HRMAX = Math.round(208 - 0.7 * AGE), HRR = HRMAX - REST;
   function hrr(f) { return Math.round(REST + f * HRR); }
-  var Z = { mod: [hrr(0.40), hrr(0.59)], vig: [hrr(0.60), hrr(0.89)], int: [Math.round(0.85 * HRMAX), Math.round(0.95 * HRMAX)] };
+  var Z = { mod: [hrr(0.40), hrr(0.59)], int: [Math.round(0.85 * HRMAX), Math.round(0.95 * HRMAX)] };
 
+  // a heart-rate range that never breaks across lines
+  function range(r) { return r[0] + "\u2060–\u2060" + r[1] + "\u00a0bpm"; }
   var WEEK = [
     { d: "Mon", t: "Strength A", s: "45 min", c: "str" },
-    { d: "Tue", t: "Brisk walk", s: "40 min · " + Z.mod[0] + "–" + Z.mod[1] + " bpm", c: "" },
-    { d: "Wed", t: "4 × 4 intervals", s: "35 min · " + Z.int[0] + "–" + Z.int[1] + " bpm", c: "int" },
+    { d: "Tue", t: "Brisk walk", s: "40 min · " + range(Z.mod), c: "" },
+    { d: "Wed", t: "4 × 4 intervals", s: "35 min · " + range(Z.int), c: "int" },
     { d: "Thu", t: "Rest or easy walk", s: "", c: "rest" },
     { d: "Fri", t: "Strength B", s: "45 min", c: "str" },
-    { d: "Sat", t: "Long walk, ride or swim", s: "60 min · " + Z.mod[0] + "–" + Z.mod[1] + " bpm", c: "" },
+    { d: "Sat", t: "Long walk, ride or swim", s: "60 min · " + range(Z.mod), c: "" },
     { d: "Sun", t: "Rest", s: "", c: "rest" }
   ];
-  var STR_A = [
-    { n: "Goblet squat", dose: "3 × 10", rest: "rest 90 s", how: "Hold a dumbbell at your chest. Sit down between your heels with your chest up, then stand.", alt: "Easier: squat to a chair. Harder: a heavier weight, or pause at the bottom." },
-    { n: "Push-up", dose: "3 × 8–12", rest: "rest 60–90 s", how: "Hands under your shoulders, body in one straight line. Lower your chest to a fist’s height from the floor.", alt: "Easier: hands on a bench or table. Harder: feet on a step." },
-    { n: "One-arm dumbbell row", dose: "3 × 10 each side", rest: "rest 60 s", how: "One hand and knee on a bench. Pull the weight towards your hip, keeping your back flat.", alt: "Easier: a lighter weight. Harder: pause for a second at the top." },
-    { n: "Romanian deadlift", dose: "3 × 10", rest: "rest 90 s", how: "Soft knees. Push your hips back and lower the weights along your legs with a flat back, then stand tall.", alt: "Easier: a lighter weight and a shorter range. Harder: one leg at a time." },
-    { n: "Dead bug", dose: "3 × 8 each side", rest: "rest 45 s", how: "On your back, arms up, knees bent at a right angle. Press your lower back to the floor and slowly stretch out the opposite arm and leg.", alt: "Easier: move the legs only. Harder: hold a light weight." }
-  ];
-  var STR_B = [
-    { n: "Split squat", dose: "3 × 8 each leg", rest: "rest 90 s", how: "Long stride. Lower your back knee towards the floor, keeping your front knee over your foot.", alt: "Easier: hold on to a wall. Harder: hold dumbbells." },
-    { n: "Dumbbell shoulder press", dose: "3 × 10", rest: "rest 60–90 s", how: "Seated or standing. Press the weights overhead without arching your lower back.", alt: "Easier: one arm at a time. Harder: standing, heavier." },
-    { n: "Pulldown, cable or band", dose: "3 × 12", rest: "rest 60 s", how: "Pull your elbows down to your sides and squeeze your shoulder blades together.", alt: "Easier: a lighter band. Harder: assisted pull-ups." },
-    { n: "Hip thrust", dose: "3 × 12", rest: "rest 60–90 s", how: "Shoulders on a bench, feet flat. Push through your heels and squeeze your buttocks at the top.", alt: "Easier: from the floor (glute bridge). Harder: a weight on your hips." },
-    { n: "Side plank", dose: "3 × 30 s each side", rest: "rest 45 s", how: "On your forearm, body in one straight line from head to feet.", alt: "Easier: knees on the floor. Harder: lift the top leg." }
-  ];
-
   var FOOD = [
     { n: "Vegetables, fruit and berries", u: "g a day", you: 400, lo: 500, hi: 800, max: 1000, aim: "500–800 g a day", note: "Half of it vegetables." },
     { n: "Whole grains", u: "g a day", you: 95, lo: 90, hi: 150, max: 150, aim: "at least 90 g a day", note: "Dry weight: oats, whole-grain bread, pasta and rice." },
@@ -1222,6 +1183,7 @@ table.rt th { font-weight: 500; color: var(--accent); background: var(--soft); }
     "book-diet": { t: "Book a dietitian", b: "<p>45 minutes by video with a licensed dietitian from our partner network, at a members’ rate.</p>" + slots(["Mon 18:00", "Wed 12:00", "Thu 17:30"]), ok: "Book this time" },
     "msg-diet": { t: "Message a dietitian", b: "<label class=\"small\" for=\"mtext\"><b>Your message</b></label><textarea id=\"mtext\" placeholder=\"For example: quick high-protein lunches I can take to work?\"></textarea>", ok: "Send" },
     "book-pt": { t: "Book a personal trainer", b: "<p>A session at a partner gym or online. Your trainer sees your training plan and wearable data only if you share them.</p>" + slots(["Tue 07:00", "Thu 18:00", "Sat 10:00"]), ok: "Book this time" },
+    "pt-plan": { t: "Get a personalised plan", b: "<p>A personal trainer from our partner network makes a plan for you from your goals, your week, the equipment you have and, if you share it, your wearable data. They also show you the exercises and adjust the plan as you get stronger.</p><p class=\"small muted\">Your trainer never sees your methylation results. Sessions are at a members’ rate.</p>" + slots(["Online", "At a partner gym"]), ok: "Send my request" },
     "msg-pt": { t: "Message a personal trainer", b: "<label class=\"small\" for=\"mtext\"><b>Your message</b></label><textarea id=\"mtext\" placeholder=\"For example: can you check my Romanian deadlift?\"></textarea>", ok: "Send" },
     "manage-oura": { t: "Oura", b: "<p>Connected since your first test. Last synced today at 07:12.</p><p class=\"small muted\">We read steps, active minutes, resting heart rate, heart-rate variability, sleep, your fitness estimate and your tags. If you disconnect, the data we already have stays in your report unless you delete it.</p>", ok: "Done", alt: "Disconnect" },
     "connect-apple": { t: "Connect Apple Health", b: "<p>Apple Health connects through the Senva app on your iPhone: open the app, choose Connections, then Apple Health. Your iPhone asks which kinds of data to share.</p>", ok: "Got it" },
@@ -1428,24 +1390,7 @@ table.rt th { font-weight: 500; color: var(--accent); background: var(--soft); }
     });
   });
   $("week").innerHTML = WEEK.map(function (d) { return '<div class="day ' + d.c + '"><span class="dn">' + d.d + '</span><span class="dt">' + esc(d.t) + "</span>" + (d.s ? '<span class="dd">' + esc(d.s) + "</span>" : "") + "</div>"; }).join("");
-  (function () {
-    var zmin = 50, zmax = 182;
-    function zp(v) { return ((v - zmin) / (zmax - zmin) * 100).toFixed(2) + "%"; }
-    var seg = [[zmin, Z.mod[0], "#E1E8E6"], [Z.mod[0], Z.vig[0], "#BFE8DC"], [Z.vig[0], Z.vig[1] + 1, "#5EC2A9"], [Z.vig[1] + 1, HRMAX, "#1D7F73"], [HRMAX, zmax, "#F3F6F5"]];
-    $("zones").innerHTML = '<div class="zint" style="left:' + zp(Z.int[0]) + ";width:calc(" + zp(Z.int[1]) + " - " + zp(Z.int[0]) + ')">4 × 4</div>' +
-      '<div class="zbar" aria-hidden="true">' + seg.map(function (sg) { return '<span style="width:' + ((sg[1] - sg[0]) / (zmax - zmin) * 100).toFixed(2) + "%;background:" + sg[2] + '"></span>'; }).join("") + "</div>" +
-      '<div class="zticks" aria-hidden="true">' + [[REST, "60 rest"], [Z.mod[0], String(Z.mod[0])], [Z.vig[0], String(Z.vig[0])], [Z.vig[1], String(Z.vig[1])], [HRMAX, HRMAX + " max"]].map(function (t) { return '<span style="left:' + zp(t[0]) + '">' + t[1] + "</span>"; }).join("") + "</div>";
-    $("zlist").innerHTML = [
-      ["#E1E8E6", "Easy", "below " + Z.mod[0] + " bpm", "Warm-up and recovery."],
-      ["#BFE8DC", "Moderate", Z.mod[0] + "–" + Z.mod[1] + " bpm", "Brisk walks and long sessions: you can talk in full sentences."],
-      ["#5EC2A9", "Vigorous", Z.vig[0] + "–" + Z.vig[1] + " bpm", "You can say a few words."],
-      ["#1D7F73", "Very hard", (Z.vig[1] + 1) + "–" + HRMAX + " bpm", "Only for the end of hard intervals."],
-      ["#FFFFFF;border:2px solid var(--deep)", "4 × 4 intervals", Z.int[0] + "–" + Z.int[1] + " bpm", "85–95 % of your maximum, during the four hard minutes."]
-    ].map(function (z) { return '<div><i style="background:' + z[0] + '"></i><span><b>' + z[1] + "</b> · " + z[2] + '</span><span class="muted">' + z[3] + "</span></div>"; }).join("");
-  })();
-  function exList(list) { return list.map(function (e, i) { return '<div class="ex"><span class="no">' + (i + 1) + '</span><div><p class="nm">' + esc(e.n) + '</p><p class="how">' + esc(e.how) + '</p><p class="alt">' + esc(e.alt) + '</p></div><p class="dose">' + esc(e.dose) + "<span>" + esc(e.rest) + "</span></p></div>"; }).join(""); }
-  $("strA").innerHTML = exList(STR_A);
-  $("strB").innerHTML = exList(STR_B);
+  $("zoneLine").innerHTML = "<b>Your heart-rate zones</b>, from your ring: moderate " + Z.mod[0] + "–" + Z.mod[1] + " bpm, hard intervals " + Z.int[0] + "–" + Z.int[1] + ' bpm.<span class="xs muted" style="display:block;margin-top:4px">From your resting heart rate (' + REST + ") and an estimated maximum of " + HRMAX + " for your age [25, 26].</span>";
   $("foodbars").innerHTML = FOOD.map(function (f) {
     function p(v) { return Math.min(100, v / f.max * 100).toFixed(1) + "%"; }
     var ok = f.you >= f.lo && f.you <= f.hi;
